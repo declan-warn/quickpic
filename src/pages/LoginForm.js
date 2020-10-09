@@ -8,7 +8,7 @@ const style = {
   maxWidth: "80ch",
 };
 
-export default api => {
+export default (api, goto) => {
   const onSubmit = async (event) => {
     event.preventDefault();
 
@@ -16,8 +16,13 @@ export default api => {
     const data = new FormData(form);
     const payload = Object.fromEntries(data.entries());
 
-    const response = await api.login(payload);
-    console.log(response);
+    const { token, message } = await api.login(payload);
+    console.log(token, message);
+    if (token) {
+      goto("feed");
+    } else {
+
+    }
   };
 
   return (
