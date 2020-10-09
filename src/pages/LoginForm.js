@@ -1,5 +1,7 @@
 import { create, css } from "/src/helpers.js";
 
+import TextField from "/src/components/TextField.js";
+
 const style = {
   padding: "1em",
   width: "100%",
@@ -22,12 +24,8 @@ export default api => {
     create("div", undefined, [
       create("form", { id: "login", style, onSubmit }, [
         create("h2", { textContent: "Log In" }),
-        create("label", { for: "username", textContent: "Username" }, [
-          create("input", { id: "username", name: "username" }),
-        ]),
-        create("label", { for: "password", textContent: "Password" }, [
-          create("input", { id: "password", name: "password" }),
-        ]),
+        TextField("username", { label: "Username", required: true }),
+        TextField("password", { label: "Password", required: true }),
         create("button", { textContent: "Submit" })
       ]),
       create("a", { href: "#/signup", textContent: "Sign Up" })

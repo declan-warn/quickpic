@@ -35,4 +35,8 @@ export default class API {
     login(payload) {
         return postJSON(`${this.url}/auth/login`, payload);
     }
+
+    signup(payload) {
+        return postJSON(`${this.url}/auth/signup`, payload);
+    }
 }
