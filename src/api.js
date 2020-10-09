@@ -8,6 +8,15 @@ const getJSON = (path, options) =>
         .then(res => res.json())
         .catch(err => console.warn(`API_ERROR: ${err.message}`));
 
+const postJSON = (path, payload) =>
+    getJSON(path, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+    });
+
 /**
  * This is a sample class API which you may base your code on.
  * You may use this as a launch pad but do not have to.
@@ -21,5 +30,9 @@ export default class API {
     /** @param {String} path */
     makeAPIRequest(path) {
         return getJSON(`${this.url}/${path}`);
+    }
+
+    login(payload) {
+        return postJSON(`${this.url}/auth/login`, payload);
     }
 }

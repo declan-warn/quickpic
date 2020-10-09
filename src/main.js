@@ -10,8 +10,4 @@ import LoginForm from "/src/pages/LoginForm.js";
 // on.
 const api = new API("http://localhost:5000");
 
-// Example usage of makeAPIRequest method.
-api.makeAPIRequest("dummy/user")
-    .then(r => console.log(r));
-
-document.querySelector("main").append(LoginForm());
+document.querySelector("main").append(LoginForm(api));

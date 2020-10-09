@@ -12,6 +12,9 @@
   --col-N0: #FFFFFF;
 
   /* Blues */
+  --col-B500: #0747A6;
+  --col-B400: #0052CC;
+  --col-B300: #0065FF;
   --col-B100: #4C9AFF;
 }
 
@@ -21,25 +24,34 @@ html, body {
   background-color: var(--col-N0);
   color: var(--col-N800);
   height: 100%;
-  font-family: -apple-system, "Open Sans", "Helvetica Neue", sans-serif;
+  font-family: "Segoe UI";
 }
 
 button {
-  font-size: 1em;
+  font-family: inherit;
+  font-size: 0.875em;
   border-radius: 0.2em;
-  background: transparent;
-  color: var(--col-N500);
+  background-color: var(--col-B400);
+  color: var(--col-N0);
   padding: 0 0.85em;
   height: 2.25em;
-  font-weight: bold;
+  font-weight: 500;
   border: none;
+  outline: none;
+  transition: background-color 100ms ease-out;
 }
 
 button:hover {
   cursor: pointer;
+  background-color: var(--col-B300);
+}
+
+button:active {
+  background-color: var(--col-B500);
 }
 
 input {
+  font-family: inherit;
   font-size: 0.875rem;
   padding: 0.6em 0.4em;
   border: 0px;
