@@ -3,7 +3,7 @@
  * @param {*} path The url to make the reques to.
  * @param {*} options Additiona options to pass to fetch.
  */
-const getJSON = (path, options) => 
+const getJSON = (path, options) =>
     fetch(path, options)
         .then(res => res.json())
         .catch(err => console.warn(`API_ERROR: ${err.message}`));
@@ -16,7 +16,7 @@ export default class API {
     /** @param {String} url */
     constructor(url) {
         this.url = url;
-    } 
+    }
 
     /** @param {String} path */
     makeAPIRequest(path) {

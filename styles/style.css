@@ -1,0 +1,62 @@
+:root {
+  /* Palette from <https://atlassian.design/foundations/color> */
+
+  /* Neutrals */
+  --col-N900: #091E42;
+  --col-N800: #172B4D;
+  --col-N500: #42526E;
+
+  --col-N40: #DFE1E6;
+  --col-N30: #EBECF0;
+  --col-N10: #FAFBFC;
+  --col-N0: #FFFFFF;
+
+  /* Blues */
+  --col-B100: #4C9AFF;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--col-N0);
+  color: var(--col-N800);
+  height: 100%;
+  font-family: -apple-system, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+button {
+  font-size: 1em;
+  border-radius: 0.2em;
+  background: transparent;
+  color: var(--col-N500);
+  padding: 0 0.85em;
+  height: 2.25em;
+  font-weight: bold;
+  border: none;
+}
+
+button:hover {
+  cursor: pointer;
+}
+
+input {
+  font-size: 0.875rem;
+  padding: 0.6em 0.4em;
+  border: 0px;
+  outline: none;
+  width: 100%;
+  border: 2px solid var(--col-N40);
+  background-color: var(--col-N10);
+  transition: border-color 200ms ease-in-out
+            , background-color 200ms ease-in-out;
+  border-radius: 0.2em;
+}
+
+input:not(:focus):hover {
+  background-color: var(--col-N30);
+}
+
+input:focus {
+  background-color: var(--col-N0);
+  border-color: var(--col-B100);
+}
