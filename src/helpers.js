@@ -34,10 +34,14 @@ export const create = (tagName, { is, style = {}, ...parameters } = {}, children
   const el = document.createElement(tagName, { is });
   Object.entries(style).forEach(([key, value]) => el.style[key] = value);
   Object.entries(parameters).forEach(([key, value]) => {
-    if (/^on[A-Z]/.test(key)) {
-      key = key.toLowerCase();
+    if (/^data-/.test(key)) {
+      el.setAttribute(key, value);
+    } else {
+      if (/^on[A-Z]/.test(key)) {
+        key = key.toLowerCase();
+      }
+      el[key] = value;
     }
-    el[key] = value;
   });
   children.filter(Boolean).forEach(child => el.append(child));
   return el;

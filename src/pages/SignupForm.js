@@ -21,7 +21,7 @@ export default api => {
   return (
     create("div", undefined, [
       create("form", { id: "login", style, onSubmit }, [
-        create("h2", { textContent: "Log In" }),
+        create("h2", { textContent: "Sign Up" }),
         create("label", { for: "username", textContent: "Username" }, [
           create("input", { id: "username", name: "username" }),
         ]),
@@ -30,7 +30,7 @@ export default api => {
         ]),
         create("button", { textContent: "Submit" })
       ]),
-      create("a", { href: "#/signup", textContent: "Sign Up" })
+      create("a", { href: "#/login", textContent: "Log In" })
     ])
   );
 }
