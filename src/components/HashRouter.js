@@ -1,8 +1,10 @@
 import { create } from "/src/helpers.js";
 
-export default (hash, routes, routeParams) => {
+export default (hash, defaultRoute, routes, routeParams) => {
   const route = hash.replace(/^#\//, "");
-  return routes.hasOwnProperty(route)
-    ? routes[route].apply(undefined, routeParams)
-    : "";
+  const component =
+    routes.hasOwnProperty(route)
+      ? routes[route]
+      : routes[defaultRoute];
+  return component.apply(undefined, routeParams);
 }

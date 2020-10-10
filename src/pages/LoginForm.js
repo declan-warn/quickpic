@@ -19,6 +19,7 @@ export default (api, goto) => {
     const { token, message } = await api.login(payload);
     console.log(token, message);
     if (token) {
+      window.localStorage.setItem("token", token);
       goto("feed");
     } else {
 
