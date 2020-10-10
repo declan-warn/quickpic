@@ -72,3 +72,18 @@ input:focus {
   background-color: var(--col-N0);
   border-color: var(--col-B100);
 }
+
+.post-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 300px));
+}
+
+.post {
+  display: flex;
+  flex-direction: column;
+  padding: 1em;
+}
+
+.post img {
+  width: 100%;
+}
