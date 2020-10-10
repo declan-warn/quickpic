@@ -53,6 +53,8 @@ export const useEndpoint = url => {
     getJSON(`${url}/dummy/user?username=${username}`);
   user.getCurrent = () =>
     getJSON(`${url}/dummy/user`);
+  user.feed = () =>
+    getJSON(`${url}/dummy/user/feed`);
 
   return { auth, user };
 };
