@@ -15,15 +15,21 @@ export default (api, goto) => {
     const { posts } = await api.user.feed();
     feed.append(
       create("div", { class: "post-list" }, posts.map(post =>
-        create("qp-post", { class: "post" }, [
-          create("img", { slot: "image", src: `data:image/png;base64,${post.src}` }),
+        create("qp-post", { class: "post", "data-post-id": post.id }, [
           create("h2", { slot: "description" }, [post.meta.description_text]),
+          create("img", { slot: "image", src: `data:image/png;base64,${post.src}` }),
           create("span", { slot: "author" }, [post.meta.author]),
           create("time", { slot: "published" }, [showDateTime(post.meta.published)]),
           create("qp-post-likes", { slot: "likes" }, post.meta.likes.map(like =>
             create("qp-post-like", { user: like })
           )),
-          create("span", { slot: "comments" }, [`${post.comments.length} comment(s)`]),
+          create("qp-post-comments", { slot: "comments" }, post.comments.map(comment =>
+            create("qp-post-comment", {}, [
+              create("span", { slot: "author" }, [comment.author]),
+              create("span", { slot: "published" }, [showDateTime(comment.published)]),
+              create("span", { slot: "comment" }, [comment.comment]),
+            ])
+          )),
         ])
       ))
     );

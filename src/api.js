@@ -17,6 +17,15 @@ const postJSON = (path, payload) =>
     body: JSON.stringify(payload),
   });
 
+const putJSON = (path, payload) =>
+  getJSON(path, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
 /**
  * This is a sample class API which you may base your code on.
  * You may use this as a launch pad but do not have to.
@@ -44,9 +53,9 @@ const postJSON = (path, payload) =>
 const useEndpoint = url => {
   const auth = {};
   auth.login = payload =>
-    getJSON(`${url}/auth/login`, payload);
+    postJSON(`${url}/auth/login`, payload);
   auth.signup = payload =>
-    getJSON(`${url}/auth/isgnup`, payload);
+    postJSON(`${url}/auth/isgnup`, payload);
 
   const user = {};
   user.getByUsername = username =>
@@ -58,7 +67,11 @@ const useEndpoint = url => {
   user.feed = () =>
     getJSON(`${url}/dummy/user/feed`);
 
-  return { auth, user };
+  const post = {};
+  post.comment = (postId, comment) =>
+    putJSON(`${url}/dummy/post/comment?id=${postId}`, { comment });
+
+  return { auth, user, post };
 };
 
 export default useEndpoint("http://localhost:5000");

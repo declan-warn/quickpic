@@ -67,3 +67,54 @@ customElements.define("qp-post-likes", class extends HTMLElement {
     withLoader(this.loadUsers());
   };
 });
+
+customElements.define("qp-post-comments", class extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: "open" });
+    this.shadowRoot.append(stylesheet());
+
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  get comments() {
+    return this.querySelectorAll("qp-post-comment");
+  }
+
+  connectedCallback() {
+    this.shadowRoot.append(
+      create("span", { onClick: this.handleClick }, [
+        `${this.comments.length} comment${this.comments.length === 1 ? "" : "s"}`
+      ])
+    );
+  }
+
+  async showComments() {
+    const onSubmit = async (event) => {
+      event.preventDefault();
+      const input = event.currentTarget.querySelector("#new-comment");
+      const postId = this.closest("qp-post").getAttribute("data-post-id");
+      const response = await api.post.comment(postId, input.value);
+    };
+
+    const list = create("div", {}, [
+      create("h3", {}, ["Comments"]),
+      create("form", { onSubmit }, [
+        create("input", { id: "new-comment", required: true })
+      ])
+    ]);
+    const popup = create("dialog", { id: "like-popup" }, [list]);
+
+    this.shadowRoot.append(popup);
+    popup.showModal();
+    popup.addEventListener("click", ({ target }) => {
+      if (target === popup) {
+        popup.remove();
+      }
+    })
+  }
+
+  async handleClick(event) {
+    this.showComments();
+  };
+});
