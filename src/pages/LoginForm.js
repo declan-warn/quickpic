@@ -16,7 +16,7 @@ export default (api, goto) => {
     const data = new FormData(form);
     const payload = Object.fromEntries(data.entries());
 
-    const { token, message } = await api.login(payload);
+    const { token, message } = await api.auth.login(payload);
     console.log(token, message);
     if (token) {
       window.localStorage.setItem("token", token);
@@ -27,14 +27,14 @@ export default (api, goto) => {
   };
 
   return (
-    create("div", undefined, [
+    create("div", {}, [
       create("form", { id: "login", style, onSubmit }, [
-        create("h2", { textContent: "Log In" }),
+        create("h2", {}, ["Log In"]),
         TextField("username", { label: "Username", required: true }),
         TextField("password", { label: "Password", required: true }),
-        create("button", { textContent: "Submit" })
+        create("button", {}, ["Submit"])
       ]),
-      create("a", { href: "#/signup", textContent: "Sign Up" })
+      create("a", { href: "#/signup" }, ["Sign Up"])
     ])
   );
 }

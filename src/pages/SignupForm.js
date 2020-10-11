@@ -15,21 +15,21 @@ export default api => {
     const data = new FormData(form);
     const payload = Object.fromEntries(data.entries());
 
-    const response = await api.signup(payload);
+    const response = await api.auth.signup(payload);
     console.log(response);
   };
 
   return (
     create("div", undefined, [
       create("form", { id: "signup", style, onSubmit }, [
-        create("h2", { textContent: "Sign Up" }),
+        create("h2", {}, ["Sign Up"]),
         TextField("username", { label: "Username", required: true }),
         TextField("password", { label: "Password", required: true }),
         TextField("email", { label: "E-mail" }),
         TextField("name", { label: "Name" }),
-        create("button", { textContent: "Submit" })
+        create("button", {}, ["Submit"])
       ]),
-      create("a", { href: "#/login", textContent: "Log In" })
+      create("a", { href: "#/login" }, ["Log In"])
     ])
   );
 }
