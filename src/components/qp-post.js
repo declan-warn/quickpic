@@ -11,7 +11,7 @@ customElements.define("qp-post", class extends HTMLElement {
       stylesheet(),
       create("div", { id: "container" }, [
         create("slot", { name: "image" }),
-        create("div", {}, [
+        create("div", { id: "actions" }, [
           create("slot", { name: "likes" }),
           create("slot", { name: "comments" }),
         ]),
@@ -40,18 +40,18 @@ customElements.define("qp-post-likes", class extends HTMLElement {
 
   connectedCallback() {
     this.shadowRoot.append(
-      create("div", { id: "actions" }, [
-        create("div", { class: "action" }, [
-          create("button", { onClick: this.likePost, class: "material-icons-outlined" }, ["favorite"]),
-          create("span", { onClick: this.loadUsers, class: "badge" }, [
-            String(this.likes.length)
-          ])
-        ]),
+      create("div", { class: "action" }, [
+        create("button", { onClick: this.likePost, class: "material-icons-outlined" }, ["favorite"]),
+        create("span", { onClick: this.loadUsers, class: "badge" }, [
+          String(this.likes.length)
+        ])
       ])
     );
   }
 
-  async loadUsers() {
+  async loadUsers(event) {
+    event.stopPropagation();
+
     const users = await withLoader(Promise.all(this.likes.map(id => api.user.getById(id))));
 
     const list = create("div", {}, [
@@ -101,7 +101,7 @@ customElements.define("qp-post-comments", class extends HTMLElement {
     this.attachShadow({ mode: "open" });
     this.shadowRoot.append(stylesheet());
 
-    this.handleClick = this.handleClick.bind(this);
+    this.showComments = this.showComments.bind(this);
   }
 
   get comments() {
@@ -110,8 +110,11 @@ customElements.define("qp-post-comments", class extends HTMLElement {
 
   connectedCallback() {
     this.shadowRoot.append(
-      create("span", { onClick: this.handleClick }, [
-        `${this.comments.length} comment${this.comments.length === 1 ? "" : "s"}`
+      create("div", { onClick: this.showComments, class: "action" }, [
+        create("button", { class: "material-icons-outlined" }, ["forum"]),
+        create("span", { class: "badge" }, [
+          String(this.comments.length)
+        ])
       ])
     );
   }
