@@ -59,5 +59,5 @@ export const withLoader = promise => {
   const spinner = create("dialog", { textContent: "loading..." });
   document.body.append(spinner);
   spinner.showModal();
-  return promise.then(() => spinner.remove());
+  return promise.then(x => { spinner.remove(); return x });
 }

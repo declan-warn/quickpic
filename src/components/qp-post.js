@@ -11,11 +11,13 @@ customElements.define("qp-post", class extends HTMLElement {
       stylesheet(),
       create("div", { id: "container" }, [
         create("slot", { name: "image" }),
+        create("div", {}, [
+          create("slot", { name: "likes" }),
+          create("slot", { name: "comments" }),
+        ]),
         create("slot", { name: "description" }),
         create("slot", { name: "author" }),
         create("slot", { name: "published" }),
-        create("slot", { name: "likes" }),
-        create("slot", { name: "comments" }),
       ])
     );
   }
@@ -27,7 +29,8 @@ customElements.define("qp-post-likes", class extends HTMLElement {
     this.attachShadow({ mode: "open" });
     this.shadowRoot.append(stylesheet());
 
-    this.handleClick = this.handleClick.bind(this);
+    this.loadUsers = this.loadUsers.bind(this);
+    this.likePost = this.likePost.bind(this);
   }
 
   get likes() {
@@ -37,14 +40,19 @@ customElements.define("qp-post-likes", class extends HTMLElement {
 
   connectedCallback() {
     this.shadowRoot.append(
-      create("span", { onClick: this.handleClick }, [
-        `${this.likes.length} like${this.likes.length === 1 ? "" : "s"}`
+      create("div", { id: "actions" }, [
+        create("div", { class: "action" }, [
+          create("button", { onClick: this.likePost, class: "material-icons-outlined" }, ["favorite"]),
+          create("span", { onClick: this.loadUsers, class: "badge" }, [
+            String(this.likes.length)
+          ])
+        ]),
       ])
     );
   }
 
   async loadUsers() {
-    const users = await Promise.all(this.likes.map(id => api.user.getById(id)));
+    const users = await withLoader(Promise.all(this.likes.map(id => api.user.getById(id))));
 
     const list = create("div", {}, [
       create("h3", {}, ["Liked By"]),
@@ -63,9 +71,10 @@ customElements.define("qp-post-likes", class extends HTMLElement {
     })
   }
 
-  async handleClick(event) {
-    withLoader(this.loadUsers());
-  };
+  async likePost() {
+    const postId = this.closest("qp-post").getAttribute("data-post-id");
+    console.log(await api.post.like(postId));
+  }
 });
 
 customElements.define("qp-post-comment", class extends HTMLElement {

@@ -70,6 +70,8 @@ const useEndpoint = url => {
   const post = {};
   post.comment = (postId, comment) =>
     putJSON(`${url}/dummy/post/comment?id=${postId}`, { comment });
+  post.like = postId =>
+    putJSON(`${url}/dummy/post/like?id=${postId}`);
 
   return { auth, user, post };
 };

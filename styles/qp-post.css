@@ -24,3 +24,30 @@
   display: flex;
   flex-direction: column;
 }
+
+#actions {
+  background-color: var(--col-B300);
+  height: 56px;
+  padding: 0 6px;
+}
+
+.action {
+  height: 56px;
+  width: 56px;
+  display: inline-flex;
+  position: relative;
+}
+
+.action button {
+  color: var(--col-N30);
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.action .badge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 0.5em 0;
+}
