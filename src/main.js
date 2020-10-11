@@ -7,7 +7,7 @@ import LoginForm from "/src/pages/LoginForm.js";
 import HashRouter from "/src/components/HashRouter.js";
 import SignupForm from "/src/pages/SignupForm.js";
 import FrontPage from "/src/pages/FrontPage.js";
-import Profile from "./pages/Profile.js";
+import "/src/pages/qp-profile.js";
 
 // This url may need to change depending on what port your backend is running
 // on.
@@ -33,7 +33,7 @@ const render = () => {
       login: LoginForm,
       signup: SignupForm,
       feed: FrontPage,
-      user: Profile,
+      user: () => create("qp-profile"),
     }, [api, goto])
   );
 };

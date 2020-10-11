@@ -61,3 +61,24 @@ export const withLoader = promise => {
   spinner.showModal();
   return promise.then(x => { spinner.remove(); return x });
 }
+
+// Hashing function used for seeding a random number generator
+// <http://www.cse.yorku.ca/~oz/hash.html>
+const djb2 = str =>
+  str.split("").reduce((hash, char) => hash * 33 ^ char.charCodeAt(0), 5381);
+
+// Seeded random number generator, for reproducible randomness
+// <https://stackoverflow.com/a/47593316>
+const mulberry32 = a => {
+  let t = a += 0x6D2B79F5;
+  t = Math.imul(t ^ t >>> 15, t | 1);
+  t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+  return ((t ^ t >>> 14) >>> 0) / 4294967296;
+}
+
+export const getAvatar = username => {
+  const seed = djb2(username);
+  const random = mulberry32(seed);
+  const avatar = Math.floor(random * 50) + 1;
+  return `/assets/avatars/${avatar}.svg`;
+}

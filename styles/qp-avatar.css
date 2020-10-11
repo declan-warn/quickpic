@@ -1,0 +1,15 @@
+@import "/styles/style.css";
+
+#container {
+  box-sizing: border-box;
+  height: 128px;
+  width: 128px;
+  padding: 24px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--col-N0);
+  background: var(--col-N50);
+}
+
+img {
+  width: 100%;
+}

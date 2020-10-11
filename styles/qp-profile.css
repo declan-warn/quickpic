@@ -1,0 +1,23 @@
+@import "/styles/style.css";
+
+#profile {
+  display: flex;
+  flex-direction: row;
+}
+
+#info {
+  background-color: var(--col-B300);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 400px;
+  padding: 64px;
+}
+
+#info h1 {
+  color: var(--col-N0);
+}
+
+#posts {
+  flex-grow: 1;
+}
