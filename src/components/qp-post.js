@@ -68,6 +68,24 @@ customElements.define("qp-post-likes", class extends HTMLElement {
   };
 });
 
+customElements.define("qp-post-comment", class extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: "open" });
+    this.shadowRoot.append(stylesheet());
+  }
+
+  connectedCallback() {
+    this.shadowRoot.append(
+      create("div", { class: "comment" }, [
+        create("slot", { name: "author" }),
+        create("slot", { name: "published" }),
+        create("slot", { name: "comment" }),
+      ])
+    );
+  }
+});
+
 customElements.define("qp-post-comments", class extends HTMLElement {
   constructor() {
     super();
@@ -101,7 +119,8 @@ customElements.define("qp-post-comments", class extends HTMLElement {
       create("h3", {}, ["Comments"]),
       create("form", { onSubmit }, [
         create("input", { id: "new-comment", required: true })
-      ])
+      ]),
+      create("slot")
     ]);
     const popup = create("dialog", { id: "like-popup" }, [list]);
 

@@ -19,3 +19,8 @@
   flex-direction: column;
   padding: 1em;
 }
+
+.comment {
+  display: flex;
+  flex-direction: column;
+}
