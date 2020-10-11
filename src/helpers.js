@@ -34,16 +34,15 @@ export const create = (tagName, { is, style = {}, ...parameters } = {}, children
   const el = document.createElement(tagName, { is });
   Object.entries(style).forEach(([key, value]) => el.style[key] = value);
   Object.entries(parameters).forEach(([key, value]) => {
-    if (/^data-/.test(key)) {
-      el.setAttribute(key, value);
+    if (/^on[A-Z]/.test(key)) {
+      el[key.toLowerCase()] = value;
     } else {
-      if (/^on[A-Z]/.test(key)) {
-        key = key.toLowerCase();
-      }
-      el[key] = value;
+      el.setAttribute(key, value);
     }
   });
-  children.filter(Boolean).forEach(child => el.append(child));
+  children
+    .filter(Boolean)
+    .forEach(child => el.append(child));
   return el;
 };
 
@@ -53,4 +52,12 @@ export const css = rules => {
   return sheet;
 }
 
-globalThis.css = css;
+export const linkToCSS = href =>
+  create("link", { href, rel: "stylesheet" });
+
+export const withLoader = promise => {
+  const spinner = create("dialog", { textContent: "loading..." });
+  document.body.append(spinner);
+  spinner.showModal();
+  return promise.then(() => spinner.remove());
+}

@@ -1,11 +1,6 @@
-import { create } from "/src/helpers.js";
+import { create, withLoader } from "/src/helpers.js";
 
-const withLoader = promise => {
-  const spinner = create("dialog", { textContent: "loading..." });
-  document.body.append(spinner);
-  spinner.showModal();
-  promise.then(() => spinner.remove());
-}
+import "/src/components/qp-post.js";
 
 const showDateTime = published => {
   const timestamp = Number(published) * 1000;
@@ -19,14 +14,16 @@ export default (api, goto) => {
   const loadPosts = async () => {
     const { posts } = await api.user.feed();
     feed.append(
-      create("ol", { className: "post-list" }, posts.map(post =>
-        create("li", { className: "post" }, [
-          create("img", { src: `data:image/png;base64,${post.src}` }),
-          create("span", { textContent: `${post.meta.description_text}` }),
-          create("span", { textContent: `${post.meta.author}` }),
-          create("span", { textContent: `${showDateTime(post.meta.published)}` }),
-          create("span", { textContent: `${post.meta.likes.length} like(s)` }),
-          create("span", { textContent: `${post.comments.length} comment(s)` }),
+      create("div", { class: "post-list" }, posts.map(post =>
+        create("qp-post", { class: "post" }, [
+          create("img", { slot: "image", src: `data:image/png;base64,${post.src}` }),
+          create("h2", { slot: "description" }, [post.meta.description_text]),
+          create("span", { slot: "author" }, [post.meta.author]),
+          create("time", { slot: "published" }, [showDateTime(post.meta.published)]),
+          create("qp-post-likes", { slot: "likes" }, post.meta.likes.map(like =>
+            create("qp-post-like", { user: like })
+          )),
+          create("span", { slot: "comments" }, [`${post.comments.length} comment(s)`]),
         ])
       ))
     );

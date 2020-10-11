@@ -41,7 +41,7 @@ const postJSON = (path, payload) =>
 //   }
 // }
 
-export const useEndpoint = url => {
+const useEndpoint = url => {
   const auth = {};
   auth.login = payload =>
     getJSON(`${url}/auth/login`, payload);
@@ -51,6 +51,8 @@ export const useEndpoint = url => {
   const user = {};
   user.getByUsername = username =>
     getJSON(`${url}/dummy/user?username=${username}`);
+  user.getById = id =>
+    getJSON(`${url}/dummy/user?id=${id}`);
   user.getCurrent = () =>
     getJSON(`${url}/dummy/user`);
   user.feed = () =>
@@ -58,3 +60,5 @@ export const useEndpoint = url => {
 
   return { auth, user };
 };
+
+export default useEndpoint("http://localhost:5000");

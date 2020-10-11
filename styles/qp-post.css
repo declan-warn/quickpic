@@ -1,0 +1,21 @@
+@import "/styles/style.css";
+
+/*
+* Stylesheet is applied to shadow-dom elements which is why ids are used
+*/
+
+#container {
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0em 0.5em 1em var(--col-N30);
+}
+
+#like-popup {
+  padding: 0;
+}
+
+#like-popup div {
+  display: flex;
+  flex-direction: column;
+  padding: 1em;
+}

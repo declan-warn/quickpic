@@ -1,4 +1,4 @@
-import { useEndpoint } from "./api.js";
+// import { useEndpoint } from "./api.js";
 // A helper you may want to use when uploading new images to the server.
 import { fileToDataUrl } from "./helpers.js";
 
@@ -12,8 +12,10 @@ import Profile from "./pages/Profile.js";
 // This url may need to change depending on what port your backend is running
 // on.
 // const api = new API("http://localhost:5000");
-const api = useEndpoint("http://localhost:5000");
-window.api = api;
+// const api = useEndpoint("http://localhost:5000");
+// window.api = api;
+
+import api from "/src/api.js";
 
 
 const main = document.querySelector("main");
