@@ -42,7 +42,7 @@ customElements.define("qp-login", class extends HTMLElement {
     const { token, message } = await api.auth.login(payload);
     console.log(token, message);
     if (token) {
-      window.localStorage.setItem("token", token);
+      sessionStorage.setItem("token", token);
       navigateTo("feed");
     } else {
 

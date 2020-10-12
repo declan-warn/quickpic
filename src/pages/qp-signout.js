@@ -7,7 +7,7 @@ customElements.define("qp-signout", class extends HTMLElement {
   }
 
   connectedCallback() {
-    localStorage.clear("token");
+    sessionStorage.clear("token");
     navigateTo("/auth/login");
   }
 });
