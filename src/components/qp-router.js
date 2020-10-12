@@ -37,8 +37,11 @@ customElements.define("qp-router", class extends HTMLElement {
   }
 
   clear() {
-    const nonRouteChildren = Array.from(this.children).filter(child => !child.matches("qp-route"));
-    nonRouteChildren.forEach(child => child.remove());
+    for (const child of [...this.childNodes]) {
+      if (!child.matches?.("qp-route")) {
+        child.remove();
+      }
+    }
   }
 });
 
@@ -48,6 +51,10 @@ customElements.define("qp-route", class extends HTMLElement {
   }
 
   render(route) {
+    if (this.hasAttribute("redirect")) {
+      return navigateTo(this.getAttribute("redirect"));
+    }
+
     const path = this.getAttribute("path");
     const tail = route.slice(path.length);
 
