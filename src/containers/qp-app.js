@@ -1,5 +1,7 @@
 import { create } from "/src/helpers.js";
 
+import "/src/components/qp-dropdown.js";
+
 customElements.define("qp-app", class extends HTMLElement {
   constructor() {
     super();
@@ -14,8 +16,9 @@ customElements.define("qp-app", class extends HTMLElement {
         create("qp-nav-link", { to: "post/new" }, [
           create("button", {}, ["New Post"])
         ]),
-        create("qp-nav-link", { to: "user" }, [
-          create("qp-avatar", { size: "medium" })
+        create("qp-dropdown", {}, [
+          create("qp-avatar", { size: "medium", slot: "entry" }),
+          create("span", { slot: "item" }, ["test"])
         ])
       ]),
       create("slot")
