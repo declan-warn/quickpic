@@ -1,4 +1,5 @@
-import { create, linkToCSS } from "/src/helpers.js";
+import { create, linkToCSS, getAvatar } from "/src/helpers.js";
+import api from "/src/api.js";
 
 customElements.define("qp-avatar", class extends HTMLElement {
   static get stylesheet() {
@@ -11,10 +12,15 @@ customElements.define("qp-avatar", class extends HTMLElement {
     this.shadowRoot.append(this.constructor.stylesheet);
   }
 
-  connectedCallback() {
+  async connectedCallback() {
+    if (!this.hasAttribute("user")) {
+      const { username } = await api.user.getCurrent();
+      this.setAttribute("user", username);
+    }
+
     this.shadowRoot.append(
-      create("div", { id: "container" }, [
-        create("img", { src: this.getAttribute("src") })
+      create("div", { id: "container", class: this.getAttribute("size") || "small" }, [
+        create("img", { src: getAvatar(this.getAttribute("user")) })
       ])
     );
   }

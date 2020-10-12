@@ -46,7 +46,7 @@ customElements.define("qp-profile", class extends HTMLElement {
       this.shadowRoot.append(
         create("div", { id: "profile" }, [
           create("section", { id: "info" }, [
-            create("qp-avatar", { src: getAvatar(this.user.username) }),
+            create("qp-avatar", { size: "xxlarge" }),
             create("h1", {}, [this.user.username]),
             create("table", {}, [
               create("tr", {}, [

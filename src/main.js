@@ -8,6 +8,7 @@ import HashRouter from "/src/components/HashRouter.js";
 import SignupForm from "/src/pages/SignupForm.js";
 import FrontPage from "/src/pages/FrontPage.js";
 import "/src/pages/qp-profile.js";
+import "/src/containers/qp-nav.js";
 
 // This url may need to change depending on what port your backend is running
 // on.
@@ -29,6 +30,15 @@ const render = () => {
     main.lastChild.remove();
   }
   main.append(
+    create("qp-nav", {}, [
+      create("qp-nav-link", { to: "feed" }, ["Feed"]),
+      create("qp-nav-link", { to: "post/new" }, [
+        create("button", {}, ["New Post"])
+      ]),
+      create("qp-nav-link", { to: "user" }, [
+        create("qp-avatar", { size: "medium" })
+      ])
+    ]),
     HashRouter(window.location.hash, "feed", {
       login: LoginForm,
       signup: SignupForm,

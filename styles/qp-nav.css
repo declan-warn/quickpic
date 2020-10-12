@@ -1,0 +1,8 @@
+nav {
+  height: 56px;
+  background: rebeccapurple;
+  display: flex;
+  justify-content: space-between;
+}
+
+
