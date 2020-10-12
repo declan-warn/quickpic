@@ -1,0 +1,6 @@
+@import "/styles/style.css";
+
+form {
+  padding: 1em;
+  max-width: 80ch;
+}

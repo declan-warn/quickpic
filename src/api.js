@@ -55,7 +55,7 @@ const useEndpoint = url => {
   auth.login = payload =>
     postJSON(`${url}/auth/login`, payload);
   auth.signup = payload =>
-    postJSON(`${url}/auth/isgnup`, payload);
+    postJSON(`${url}/auth/signup`, payload);
 
   const user = {};
   user.getByUsername = username =>

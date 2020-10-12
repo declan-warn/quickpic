@@ -88,3 +88,9 @@ export const clear = element => {
     element.lastChild.remove();
   }
 }
+
+export const showDateTime = published => {
+  const timestamp = Number(published) * 1000;
+  const date = new Date(timestamp);
+  return date.toLocaleString();
+};

@@ -1,5 +1,18 @@
 import { create, clear } from "/src/helpers.js";
 
+export const navigateTo = route => {
+  if (!route.startsWith("/")) {
+    route = `/${route}`;
+  }
+  window.location.hash = route;
+}
+
+export const getRoute = () =>
+  window.location.hash.replace(/^#/, "");
+
+const tail = route =>
+  route.replace(/^\/[^\/]*/, "");
+
 customElements.define("qp-router", class extends HTMLElement {
   constructor() {
     super();
@@ -13,31 +26,52 @@ customElements.define("qp-router", class extends HTMLElement {
   }
 
   render() {
+    this.clear();
     const route = window.location.hash.replace(/^#/, "");
     for (const child of this.children) {
       if (child.matches("qp-route") && child.matchesRoute(route)) {
-        this.append(child.render());
+        this.append(child.render(route));
         break;
       }
     }
   }
 
   clear() {
-    clear(this);
+    const nonRouteChildren = Array.from(this.children).filter(child => !child.matches("qp-route"));
+    nonRouteChildren.forEach(child => child.remove());
   }
 });
 
-customElements.define("qp-route", class QPRoute extends HTMLElement {
+customElements.define("qp-route", class extends HTMLElement {
   constructor() {
     super();
   }
 
-  render() {
-    return create(this.getAttribute("component"));
+  render(route) {
+    const path = this.getAttribute("path");
+    const tail = route.slice(path.length);
+
+    const component = this.getAttribute("component");
+    const child = [...this.children].find(child => child.matchesRoute(tail))?.render(tail) ?? "";
+
+    return (
+      component
+        ? create(component, {}, [child])
+        : child
+    );
   }
 
   matchesRoute(route) {
-    return this.isDefault() || this.getAttribute("path") === route;
+    const path = this.getAttribute("path");
+    const isDefault = this.isDefault();
+    const isExact = path === route;
+    const isPartial = route.startsWith(path) && this.childMatchesRoute(route.slice(path.length));
+
+    return isDefault || isExact || isPartial;
+  }
+
+  childMatchesRoute(route) {
+    return [...this.children].some(child => child?.matchesRoute(route));
   }
 
   isDefault() {
