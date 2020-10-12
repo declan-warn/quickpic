@@ -10,6 +10,7 @@ import "/src/pages/qp-login.js";
 import "/src/pages/qp-signup.js";
 import "/src/pages/qp-feed.js";
 import "/src/containers/qp-app.js";
+import "/src/pages/qp-signout.js";
 
 import api from "/src/api.js";
 
@@ -18,10 +19,11 @@ const main = document.querySelector("main").append(
     create("qp-route", { path: "/auth" }, [
       create("qp-route", { path: "/login", component: "qp-login" }),
       create("qp-route", { path: "/signup", component: "qp-signup" }),
+      create("qp-route", { path: "/signout", component: "qp-signout" }),
     ]),
     create("qp-route", { path: "/", component: "qp-app" }, [
       create("qp-route", { path: "user", component: "qp-profile" }),
       create("qp-route", { path: "feed", component: "qp-feed" }),
-    ])
+    ]),
   ])
 );

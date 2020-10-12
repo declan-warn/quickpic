@@ -18,7 +18,8 @@ customElements.define("qp-app", class extends HTMLElement {
         ]),
         create("qp-dropdown", {}, [
           create("qp-avatar", { size: "medium", slot: "entry" }),
-          create("span", { slot: "item" }, ["test"])
+          create("a", { href: "#/user" }, ["Profile"]),
+          create("a", { href: "#/auth/signout" }, ["Sign Out"]),
         ])
       ]),
       create("slot")

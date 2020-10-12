@@ -13,8 +13,8 @@ customElements.define("qp-dropdown", class extends HTMLElement {
       linkToCSS("/styles/qp-dropdown.css"),
       create("span", { id: "container" }, [
         create("slot", { name: "entry" }),
-        create("div", { id: "menu" }, [
-          create("slot", { name: "item" }),
+        create("nav", { id: "menu" }, [
+          create("slot"),
         ])
       ])
     );
