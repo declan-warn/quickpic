@@ -9,6 +9,7 @@ import SignupForm from "/src/pages/SignupForm.js";
 import FrontPage from "/src/pages/FrontPage.js";
 import "/src/pages/qp-profile.js";
 import "/src/containers/qp-nav.js";
+import "/src/components/qp-router.js";
 
 // This url may need to change depending on what port your backend is running
 // on.
@@ -39,15 +40,18 @@ const render = () => {
         create("qp-avatar", { size: "medium" })
       ])
     ]),
-    HashRouter(window.location.hash, "feed", {
-      login: LoginForm,
-      signup: SignupForm,
-      feed: FrontPage,
-      user: () => create("qp-profile"),
-    }, [api, goto])
+    create("qp-router", {}, [
+      create("qp-route", { path: "/user", component: "qp-profile" })
+    ])
+    // HashRouter(window.location.hash, "feed", {
+    //   login: LoginForm,
+    //   signup: SignupForm,
+    //   feed: FrontPage,
+    //   user: () => create("qp-profile"),
+    // }, [api, goto])
   );
 };
 
 render();
 
-window.addEventListener("hashchange", render);
+// window.addEventListener("hashchange", render);

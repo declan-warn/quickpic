@@ -82,3 +82,9 @@ export const getAvatar = username => {
   const avatar = Math.floor(random * 50) + 1;
   return `/assets/avatars/${avatar}.svg`;
 }
+
+export const clear = element => {
+  while (element.hasChildNodes()) {
+    element.lastChild.remove();
+  }
+}
