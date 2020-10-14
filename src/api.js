@@ -65,21 +65,21 @@ const useEndpoint = url => {
 
   const user = {};
   user.getByUsername = username =>
-    getJSON(`${url}/dummy/user?username=${username}`);
+    getJSON(`${url}/user?username=${username}`);
   user.getById = id =>
-    getJSON(`${url}/dummy/user?id=${id}`);
+    getJSON(`${url}/user?id=${id}`);
   user.getCurrent = () =>
     getJSON(`${url}/user`);
   user.feed = () =>
-    getJSON(`${url}/dummy/user/feed`);
+    getJSON(`${url}/user/feed`);
 
   const post = {};
   post.comment = (postId, comment) =>
-    putJSON(`${url}/dummy/post/comment?id=${postId}`, { comment });
+    putJSON(`${url}/post/comment?id=${postId}`, { comment });
   post.like = postId =>
-    putJSON(`${url}/dummy/post/like?id=${postId}`);
+    putJSON(`${url}/post/like?id=${postId}`);
   post.get = postId =>
-    getJSON(`${url}/dummy/post?id=${postId}`);
+    getJSON(`${url}/post?id=${postId}`);
 
   return { auth, user, post };
 };

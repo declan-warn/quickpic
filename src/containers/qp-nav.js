@@ -12,22 +12,14 @@ customElements.define("qp-nav", class extends HTMLElement {
       this.constructor.stylesheet,
       create("nav", {}, [
         create("div", {}, [
-          create("slot", { name: "link" }),
+          create("slot", { name: "logo" }),
+          create("slot", { name: "primary" }),
         ]),
         create("div", {}, [
-          create("slot"),
+          create("slot", { name: "secondary" }),
         ]),
       ])
     );
-  }
-
-  connectedCallback() {
-    for (const child of this.children) {
-      console.log("CHILD", child);
-      if (child.tagName.toLowerCase() === "qp-nav-link") {
-        child.setAttribute("slot", "link");
-      }
-    }
   }
 });
 
@@ -43,11 +35,11 @@ customElements.define("qp-nav-link", class extends HTMLElement {
   }
 
   connectedCallback() {
-    const active = window.location.hash.endsWith(this.getAttribute("to"));
-    console.log(window.location.hash, this.getAttribute("to"), active);
     this.shadowRoot.append(
-      create("a", { class: `${active ? "active" : ""}`, href: `#/${this.getAttribute("to")}` }, [
-        create("slot")
+      create("button", {}, [
+        create("i", { class: "material-icons-outlined" }, [
+          create("slot")
+        ])
       ])
     );
   }

@@ -1,0 +1,70 @@
+@import "/styles/base.css";
+
+#feed {
+  display: flex;
+  flex-direction: row;
+}
+
+aside {
+  background: var(--col-N20);
+  width: 240px;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+aside span {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+aside button {
+  padding: 8px 12px;
+  border-radius: 3px;
+  background-color: transparent;
+  height: 40px;
+  text-align: left;
+  color: var(--col-N500);
+}
+
+aside button.action {
+  height: 64px;
+  display: inline-flex;
+  align-items: center;
+  font-weight: 500;
+}
+
+aside button.action ion-icon {
+  background: var(--col-T300);
+  color: var(--col-N0);
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;
+  border-radius: 3px;
+  border: 8px solid var(--col-T300);
+}
+
+aside button:hover {
+  background-color: var(--col-N30);
+}
+
+.post-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 300px));
+  width: 100%;
+}
+
+.post {
+  display: flex;
+  flex-direction: column;
+  padding: 1em;
+}
+
+.post img {
+  width: 100%;
+}

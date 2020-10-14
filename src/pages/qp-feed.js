@@ -6,7 +6,7 @@ import "/src/components/qp-post.js";
 
 customElements.define("qp-feed", class extends HTMLElement {
   static get stylesheet() {
-    return linkToCSS("/styles/style.css");
+    return linkToCSS("/styles/qp-feed.css");
   }
 
   constructor() {
@@ -14,12 +14,27 @@ customElements.define("qp-feed", class extends HTMLElement {
 
     this.attachShadow({ mode: "open" });
     this.shadowRoot.append(this.constructor.stylesheet);
+
+    this.filterByUser = this.filterByUser.bind(this);
   }
 
   async connectedCallback() {
     const { posts } = await withLoader(api.user.feed());
     this.shadowRoot.append(
       create("div", { id: "feed" }, [
+        create("aside", { id: "side-bar" }, [
+          create("button", { class: "action" }, [
+            create("ion-icon", { name: "add", size: "small" }),
+            "New Post",
+          ]),
+          create("button", { class: "action" }, [
+            create("ion-icon", { name: "eye-outline", size: "small" }),
+            "View All",
+          ]),
+          create("span", { class: "h300" }, [
+            "Following"
+          ]),
+        ]),
         create("div", { class: "post-list" }, posts.map(post =>
           create("qp-post", { class: "post", "data-post-id": post.id }, [
             create("h2", { slot: "description" }, [post.meta.description_text]),
@@ -40,5 +55,22 @@ customElements.define("qp-feed", class extends HTMLElement {
         ))
       ])
     );
+
+    const { following } = await api.user.getCurrent();
+    const users = await Promise.all(following.map(api.user.getById));
+    this.shadowRoot.getElementById("side-bar").append(
+      ...users.map(user =>
+        create("button", { onClick: () => this.filterByUser(user.username) }, [user.username])
+      )
+    )
+  }
+
+  filterByUser(username) {
+    // const posts = [...this.shadowRoot.querySelectorAll("qp-post")];
+    // posts.forEach(post => {
+    //   if (post.querySelector("[slot='author']").textContent !== username) {
+    //     post.style.display = "none";
+    //   }
+    // });
   }
 });

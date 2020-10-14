@@ -2,7 +2,7 @@
   font-family: "Material Icons Outlined";
   font-style: normal;
   font-weight: 400;
-  src: url("/assets/MaterialIconsOutlined-Regular.otf") format("otf");
+  src: url("/assets/MaterialIconsOutlined-Regular.otf") format("opentype");
 }
 
 .material-icons-outlined {

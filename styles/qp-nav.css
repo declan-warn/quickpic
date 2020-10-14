@@ -1,10 +1,43 @@
+@import "/styles/icon-font.css";
+
 nav {
-  height: 56px;
-  background: rebeccapurple;
+  height: 100vh;
+  background: var(--col-B500);
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
+  align-items: center;
   box-sizing: border-box;
-  padding: 0 12px;
+  padding: 24px 0;
+  position: sticky;
+  top: 0px;
+  width: 64px;
 }
 
+nav > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
+button {
+  background: none;
+  border: none;
+  color: var(--col-N0);
+  outline: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+button:hover {
+  background-color: rgba(9, 30, 66, 0.42);
+  cursor: pointer;
+}
+
+:host([slot="logo"]) {
+  margin-bottom: 16px;
+}

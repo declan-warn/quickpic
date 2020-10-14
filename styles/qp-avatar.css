@@ -23,3 +23,7 @@
 img {
   width: 100%;
 }
+
+:host([outline="false"]) #container {
+  box-shadow: none;
+}

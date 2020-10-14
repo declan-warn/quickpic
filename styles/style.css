@@ -1,25 +1,5 @@
 @import "https://fonts.googleapis.com/icon?family=Material+Icons+Outlined";
-
-:root {
-  /* Palette from <https://atlassian.design/foundations/color> */
-
-  /* Neutrals */
-  --col-N900: #091E42;
-  --col-N800: #172B4D;
-  --col-N500: #42526E;
-
-  --col-N50: #C1C7D0;
-  --col-N40: #DFE1E6;
-  --col-N30: #EBECF0;
-  --col-N10: #FAFBFC;
-  --col-N0: #FFFFFF;
-
-  /* Blues */
-  --col-B500: #0747A6;
-  --col-B400: #0052CC;
-  --col-B300: #0065FF;
-  --col-B100: #4C9AFF;
-}
+@import "/styles/colour.css";
 
 * {
   box-sizing: border-box;
@@ -82,21 +62,6 @@ input:not(:focus):hover {
 input:focus {
   background-color: var(--col-N0);
   border-color: var(--col-B100);
-}
-
-.post-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 300px));
-}
-
-.post {
-  display: flex;
-  flex-direction: column;
-  padding: 1em;
-}
-
-.post img {
-  width: 100%;
 }
 
 .badge {
