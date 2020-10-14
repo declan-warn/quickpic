@@ -76,6 +76,8 @@ const mulberry32 = a => {
   return ((t ^ t >>> 14) >>> 0) / 4294967296;
 }
 
+// Will return a 'random' avatar, using a random generator seeded by the provided username
+// Meaning that the same username will always provide the same avatar
 export const getAvatar = username => {
   const seed = djb2(username);
   const random = mulberry32(seed);

@@ -4,7 +4,13 @@
  * @param {*} options Additiona options to pass to fetch.
  */
 const getJSON = (path, options) =>
-  fetch(path, options)
+  fetch(path, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Token ${sessionStorage.getItem("token")}`
+    }
+  })
     .then(res => res.json())
     .catch(err => console.warn(`API_ERROR: ${err.message}`));
 
@@ -63,7 +69,7 @@ const useEndpoint = url => {
   user.getById = id =>
     getJSON(`${url}/dummy/user?id=${id}`);
   user.getCurrent = () =>
-    getJSON(`${url}/dummy/user`);
+    getJSON(`${url}/user`);
   user.feed = () =>
     getJSON(`${url}/dummy/user/feed`);
 
