@@ -30,14 +30,19 @@ export function fileToDataUrl(file) {
   return dataUrlPromise;
 }
 
+// <https://stackoverflow.com/a/31538091>
+const isPrimitive = x => x !== Object(x);
+
 export const create = (tagName, { is, style = {}, ...parameters } = {}, children = []) => {
   const el = document.createElement(tagName, { is });
   Object.entries(style).forEach(([key, value]) => el.style[key] = value);
   Object.entries(parameters).forEach(([key, value]) => {
     if (/^on[A-Z]/.test(key)) {
       el[key.toLowerCase()] = value;
-    } else {
+    } else if (isPrimitive(value)) {
       el.setAttribute(key, value);
+    } else {
+      el[key] = value;
     }
   });
   children

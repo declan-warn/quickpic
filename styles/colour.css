@@ -13,13 +13,21 @@
   --col-N20: #F4F5F7;
   --col-N10: #FAFBFC;
   --col-N0: #FFFFFF;
+  
+  /* Reds */
+  --col-R300: #FF5630;
+  --col-R50: #FFEBE6;
 
   /* Blues */
   --col-B500: #0747A6;
   --col-B400: #0052CC;
   --col-B300: #0065FF;
   --col-B100: #4C9AFF;
+  --col-B50: #DEEBFF;
 
   /* Teals */
   --col-T300: #00B8D9;
+
+  /* Purples */
+  --col-P400: #5243AA;
 }

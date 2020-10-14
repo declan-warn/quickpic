@@ -1,5 +1,13 @@
 @import "/styles/style.css";
 
+#container.xsmall {
+  --dim: 16px;
+}
+
+#container.small {
+  --dim: 24px;
+}
+
 #container.medium {
   --dim: 32px;
 }

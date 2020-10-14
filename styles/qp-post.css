@@ -1,4 +1,4 @@
-@import "/styles/style.css";
+@import "/styles/base.css";
 
 /*
 * Stylesheet is applied to shadow-dom elements which is why ids are used
@@ -7,7 +7,42 @@
 #container {
   display: flex;
   flex-direction: column;
-  box-shadow: 0em 0.5em 1em var(--col-N30);
+  height: 100%;
+  width: 100%;
+  padding: 8px;
+}
+
+#frame {
+  position: relative;
+}
+
+#frame button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.31) 0px 0px 1px;
+  opacity: 0;
+  transition: opacity 200ms ease-out;
+}
+
+#frame:hover button {
+  opacity: 1;
+}
+
+img {
+  width: 100%;
+  border-radius: 3px;
+  margin-bottom: 8px;
+}
+
+#description {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+a qp-avatar {
+  margin-right: 8px;
 }
 
 #like-popup {
@@ -26,48 +61,49 @@
 }
 
 #actions {
-  background-color: var(--col-B400);
-  height: 56px;
   display: flex;
-  justify-content: center;
-}
-
-.action {
-  box-sizing: border-box;
-  height: 56px;
-  display: inline-flex;
   align-items: center;
-  justify-content: center;
 }
 
-.action button {
-  color: var(--col-N30);
-  padding: 0;
-  width: 56px;
-  height: 56px;
-  box-sizing: border-box;
-  display: inline-flex;
+#actions .icon-button {
+  width: 28px;
+  height: 28px;
+  background-color: transparent;
+}
+
+#actions button:hover {
+  background-color: var(--col-N20);
+}
+
+#actions button:active {
+  background-color: var(--col-B50);
+}
+
+#like ion-icon[name="heart"] {
+  color: var(--col-R300);
+}
+
+#actions #like:active {
+  background-color: var(--col-R50);
+}
+
+#actions .separator {
+  font-size: 6px;
+  margin-left: 12px;
+  margin-right: 6px;
+}
+
+#description {
+  margin: 8px 6px;
+}
+
+footer {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
+  margin: 8px 6px;
 }
 
-.action button:hover {
-  background: transparent;
-}
-
-.action .badge {
-  /* margin-right: 1em; */
-  background-color: var(--col-N30);
-  color: var(--col-B500);
-  position: relative;
-  left: -1em;
-}
-
-.action .badge:hover {
-  cursor: pointer;
-  background-color: var(--col-N0);
-}
-
-.action .badge:active {
-  background-color: var(--col-N40);
+footer .h200 {
+  margin: 0;
 }

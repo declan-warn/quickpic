@@ -1,57 +1,61 @@
-import { create, linkToCSS, withLoader } from "/src/helpers.js";
+import { create, linkToCSS, withLoader, showDateTime } from "/src/helpers.js";
 import api from "/src/api.js";
 
 const stylesheet = () => linkToCSS("/styles/qp-post.css");
 
 customElements.define("qp-post", class extends HTMLElement {
-  constructor() {
-    super();
-    this.attachShadow({ mode: "open" });
-    this.shadowRoot.append(
-      stylesheet(),
-      create("div", { id: "container" }, [
-        create("slot", { name: "image" }),
-        create("div", { id: "actions" }, [
-          create("slot", { name: "likes" }),
-          create("slot", { name: "comments" }),
-        ]),
-        create("slot", { name: "description" }),
-        create("slot", { name: "author" }),
-        create("slot", { name: "published" }),
-      ])
-    );
+  static get stylesheet() {
+    return linkToCSS("/styles/qp-post.css");
   }
-});
 
-customElements.define("qp-post-likes", class extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
-    this.shadowRoot.append(stylesheet());
 
-    this.loadUsers = this.loadUsers.bind(this);
+    this.showLikes = this.showLikes.bind(this);
     this.likePost = this.likePost.bind(this);
   }
 
-  get likes() {
-    const likes = [...this.querySelectorAll("qp-post-like")];
-    return likes.map(like => like.getAttribute("user"));
-  }
+  async connectedCallback() {
+    const { id } = await api.user.getCurrent();
 
-  connectedCallback() {
     this.shadowRoot.append(
-      create("div", { class: "action" }, [
-        create("button", { onClick: this.likePost, class: "material-icons-outlined" }, ["favorite"]),
-        create("span", { onClick: this.loadUsers, class: "badge" }, [
-          String(this.likes.length)
+      this.constructor.stylesheet,
+      create("div", { id: "container", class: "card" }, [
+        create("div", { id: "frame" }, [
+          create("img", { src: this.getAttribute("src") }),
+          create("button", { class: "icon-button" }, [
+            create("ion-icon", { name: "expand" })
+          ])
+        ]),
+        create("div", { id: "actions" }, [
+          create("button", { onClick: this.likePost, id: "like", class: "icon-button" }, [
+            create("ion-icon", {
+              name: this.likes.includes(id) ? "heart" : "heart-outline"
+            }),
+          ]),
+          create("span", { onClick: this.showLikes }, [String(this.likes.length)]),
+          create("ion-icon", { class: "separator", name: "ellipse" }),
+          create("button", { class: "icon-button" }, [
+            create("ion-icon", { name: "chatbubble-outline" })
+          ]),
+          create("span", {}, [String(this.comments.length)])
+        ]),
+        create("span", { id: "description", class: "h400", title: this.getAttribute("description") }, [
+          this.getAttribute("description")
+        ]),
+        create("footer", {}, [
+          create("a", { id: "author", href: `#/user/${this.getAttribute("author")}` }, [
+            create("qp-avatar", { size: "small", user: this.getAttribute("author") }),
+            this.getAttribute("author")
+          ]),
+          create("time", { id: "published", class: "h200" }, [showDateTime(this.getAttribute("published"))]),
         ])
       ])
     );
   }
 
-  async loadUsers(event) {
-    event.stopPropagation();
-
+  async showLikes(event) {
     const users = await withLoader(Promise.all(this.likes.map(id => api.user.getById(id))));
 
     const list = create("div", {}, [
@@ -68,11 +72,12 @@ customElements.define("qp-post-likes", class extends HTMLElement {
       if (target === popup) {
         popup.remove();
       }
-    })
+    });
   }
 
-  async likePost() {
-    const postId = this.closest("qp-post").getAttribute("data-post-id");
+  async likePost(event) {
+    event.target.blur();
+    const postId = this.getAttribute("data-post-id");
     console.log(await api.post.like(postId));
   }
 });

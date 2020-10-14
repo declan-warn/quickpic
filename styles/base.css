@@ -1,19 +1,43 @@
 @import "/styles/colour.css";
+@import "/styles/icon-font.css";
+
+body {
+  color: var(--col-N800);
+}
 
 * {
   box-sizing: border-box;
   font-family: "Segoe UI";
   font-size: 14px;
+  /* color: var(--col-N800); */
 }
 
 button {
   border: none;
   outline: none;
+  border-radius: 3px;
+  background-color: var(--col-N20);
 }
 
 button:hover {
   cursor: pointer;
+  background-color: var(--col-N30);
 }
+
+button:active {
+  background-color: var(--col-B50);
+}
+
+button.icon-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button:
 
 .h600 {
   font-size: 20px;
@@ -24,6 +48,15 @@ button:hover {
   margin-top: 28px;
 }
 
+.h400 {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.003em;
+  color: var(--col-N800);
+  line-height: 16px;
+  margin-top: 16px;
+}
+
 .h300 {
   font-size: 12px;
   font-weight: 600;
@@ -32,4 +65,34 @@ button:hover {
   text-transform: uppercase;
   line-height: 16px;
   margin-top: 20px;
+}
+
+.h200 {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--col-N200);
+  line-height: 16px;
+  margin-top: 16px;
+}
+
+.card {
+  background: var(--col-N0);
+  box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px, rgba(9, 30, 66, 0.31) 0px 0px 1px 0px;
+  border-radius: 3px;
+}
+
+a {
+  display: inline-flex;
+  align-items: center;
+  color: var(--col-B400);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+a:visited {
+  color: var(--col-P400);
 }

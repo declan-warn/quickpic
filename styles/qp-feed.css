@@ -55,14 +55,17 @@ aside button:hover {
 
 .post-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 300px));
+  grid-template-columns: repeat(auto-fit, minmax(100px, 300px));
   width: 100%;
+  gap: 16px;
+  padding: 16px;
+  justify-content: space-evenly;
+  align-content: start;
 }
 
 .post {
   display: flex;
   flex-direction: column;
-  padding: 1em;
 }
 
 .post img {
