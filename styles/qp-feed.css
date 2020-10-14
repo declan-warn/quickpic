@@ -49,7 +49,7 @@ aside button.action ion-icon {
   border: 8px solid var(--col-T300);
 }
 
-aside button:hover {
+aside button:not(:active):hover {
   background-color: var(--col-N30);
 }
 

@@ -34,8 +34,12 @@ button {
 }
 
 button:hover {
-  background-color: rgba(9, 30, 66, 0.42);
+  background-color: var(--col-N800);
   cursor: pointer;
+}
+
+button:active {
+  background-color: var(--col-B200);
 }
 
 :host([slot="logo"]) {

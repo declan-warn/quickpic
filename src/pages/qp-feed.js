@@ -31,9 +31,13 @@ customElements.define("qp-feed", class extends HTMLElement {
             create("ion-icon", { name: "eye-outline", size: "small" }),
             "View All",
           ]),
-          create("span", { class: "h300" }, ["Sort by"]),
           create("span", { class: "h300" }, [
-            "Following"
+            "Order",
+            create("ion-icon", { name: "swap-vertical-outline" })
+          ]),
+          create("span", { class: "h300" }, [
+            "Filter",
+            create("ion-icon", { name: "funnel-outline" })
           ]),
         ]),
         create("div", { class: "post-list" }, posts.map(post =>
