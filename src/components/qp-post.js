@@ -14,6 +14,13 @@ customElements.define("qp-post", class extends HTMLElement {
 
     this.showLikes = this.showLikes.bind(this);
     this.likePost = this.likePost.bind(this);
+
+    this.expandImage = this.expandImage.bind(this);
+    this.contractImage = this.contractImage.bind(this);
+  }
+
+  get id() {
+    return this.getAttribute("data-post-id");
   }
 
   async connectedCallback() {
@@ -23,8 +30,8 @@ customElements.define("qp-post", class extends HTMLElement {
       this.constructor.stylesheet,
       create("div", { id: "container", class: "card" }, [
         create("div", { id: "frame" }, [
-          create("img", { src: this.getAttribute("src") }),
-          create("button", { class: "icon-button" }, [
+          create("img", { id: "image", src: this.getAttribute("src") }),
+          create("button", { onClick: this.expandImage, class: "icon-button" }, [
             create("ion-icon", { name: "expand" })
           ])
         ]),
@@ -55,6 +62,37 @@ customElements.define("qp-post", class extends HTMLElement {
     );
   }
 
+  async expandImage() {
+    const img = this.shadowRoot.getElementById("image");
+    const rect = img.getBoundingClientRect();
+    const clone = create("dialog", {}, [
+      create("img", { src: img.src }),
+      create("button", { onClick: this.contractImage, class: "icon-button floating" }, [
+        create("ion-icon", { name: "contract" })
+      ])
+    ]);
+    clone.style.setProperty("--expandStartLeft", `${Math.round(rect.x)}px`);
+    clone.style.setProperty("--expandStartTop", `${Math.round(rect.y)}px`);
+    clone.style.setProperty("--expandStatWidth", `${Math.round(rect.width)}px`);
+    clone.style.setProperty("--expandStatHeight", `${Math.round(rect.height)}px`);
+    img.insertAdjacentElement("beforebegin", clone);
+    clone.showModal();
+    img.style.visibility = "hidden";
+    img.nextSibling.style.visibility = "hidden";
+    clone.classList.add("expanded", "floating", "card");
+  }
+
+  async contractImage() {
+    const clone = this.shadowRoot.querySelector("dialog");
+    clone.addEventListener("animationend", () => {
+      const img = this.shadowRoot.getElementById("image");
+      img.style.visibility = "visible";
+      img.nextSibling.style.visibility = "visible";
+      clone.remove();
+    });
+    clone.classList.add("contract");
+  }
+
   async showLikes(event) {
     const users = await withLoader(Promise.all(this.likes.map(id => api.user.getById(id))));
 
@@ -77,8 +115,7 @@ customElements.define("qp-post", class extends HTMLElement {
 
   async likePost(event) {
     event.target.blur();
-    const postId = this.getAttribute("data-post-id");
-    console.log(await api.post.like(postId));
+    console.log(await api.post.like(this.id));
   }
 });
 

@@ -16,7 +16,7 @@
   position: relative;
 }
 
-#frame button {
+#frame > button {
   position: absolute;
   top: 8px;
   right: 8px;
@@ -25,7 +25,7 @@
   transition: opacity 200ms ease-out;
 }
 
-#frame:hover button {
+#frame:hover > button {
   opacity: 1;
 }
 
@@ -106,4 +106,83 @@ footer {
 
 footer .h200 {
   margin: 0;
+}
+
+.expanded {
+  animation-name: expand;
+  animation-duration: 200ms;
+
+  width: calc(100vh - 32px);
+  height: calc(100vh - 32px);
+  z-index: 100;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  margin: 0;
+
+  border: none;
+  padding: 0;
+}
+
+.expanded > button {
+  opacity: 0;
+  transition: opacity 200ms ease-out;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+.expanded > img:hover + button, .expanded button:hover  {
+  opacity: 1;
+}
+
+@keyframes expand {
+  from {
+    width: var(--expandStartWidth);
+    height: var(--expandStartHeight);
+    width: 284px;
+    height: 284px;
+    position: fixed;
+    left: var(--expandStartLeft);
+    top: var(--expandStartTop);
+    transform: translate(0%, 0%);
+  }
+
+  to {
+    width: calc(100vh - 32px);
+    height: calc(100vh - 32px);
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.contract {
+  animation-name: contract;
+  animation-duration: 200ms;
+}
+
+@keyframes contract {
+  from {
+    width: calc(100vh - 32px);
+    height: calc(100vh - 32px);
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    /* transform: translate(-50%, -50%); */
+  }
+
+  to {
+    /* width: var(--expandStartWidth);
+    height: var(--expandStartHeight); */
+    width: 284px;
+    height: 284px;
+    position: fixed;
+    left: var(--expandStartLeft);
+    top: var(--expandStartTop);
+    transform: translate(0%, 0%);
+  }
 }
