@@ -31,6 +31,7 @@ button {
   display: inline-flex;
   justify-content: center;
   align-items: center;
+  font-size: 24px;
 }
 
 button:hover {
@@ -44,4 +45,8 @@ button:active {
 
 :host([slot="logo"]) {
   margin-bottom: 16px;
+}
+
+button ::slotted(a) {
+  color: inherit;
 }

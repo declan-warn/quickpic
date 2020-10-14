@@ -37,9 +37,7 @@ customElements.define("qp-nav-link", class extends HTMLElement {
   connectedCallback() {
     this.shadowRoot.append(
       create("button", { "aria-label": this.getAttribute("aria-label") }, [
-        create("i", { class: "material-icons-outlined" }, [
-          create("slot")
-        ])
+        create("slot")
       ])
     );
   }
