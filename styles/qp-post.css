@@ -111,6 +111,7 @@ footer .h200 {
 .expanded {
   animation-name: expand;
   animation-duration: 200ms;
+  animation-timing-function: ease-in-out;
 
   width: calc(100vh - 32px);
   height: calc(100vh - 32px);
@@ -163,6 +164,7 @@ footer .h200 {
 .contract {
   animation-name: contract;
   animation-duration: 200ms;
+  animation-timing-function: ease-in-out;
 }
 
 @keyframes contract {
