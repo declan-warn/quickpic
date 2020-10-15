@@ -98,6 +98,7 @@ a {
   align-items: center;
   color: var(--col-B400);
   text-decoration: none;
+  height: 1em;
 }
 
 a:hover {

@@ -49,4 +49,5 @@ button:active {
 
 button ::slotted(a) {
   color: inherit;
+  height: 1em;
 }

@@ -6,8 +6,31 @@
   }
 
   to {
-    transform: scale(100%, 100%);
+    transform: scale(1, 1);
   }
+}
+
+@keyframes growing {
+  from {
+    transform: scale(0) translate(-50%, -50%);
+  }
+
+  to {
+    transform: scale(1) translate(-50%, -50%);
+  }
+}
+
+.grow {
+  animation-name: grow;
+  animation-duration: 200ms;
+  animation-timing-function: ease-in-out;
+}
+
+.growing {
+  animation-name: growing;
+  animation-duration: 200ms;
+  animation-timing-function: ease-in-out;
+  transform-origin: top left;
 }
 
 #container {
@@ -17,7 +40,7 @@
   width: 100%;
   padding: 8px;
   animation-name: grow;
-  animation-duration: 400ms;
+  animation-duration: 300ms;
   animation-timing-function: ease-in-out;
 }
 
@@ -74,7 +97,7 @@ a qp-avatar {
 }
 
 .popup {
-  min-width: 80ch;
+  /* min-width: 80ch; */
   border: 0px;
   position: fixed;
   top: 50%;
@@ -82,8 +105,10 @@ a qp-avatar {
   transform: translate(-50%, -50%);
   margin: 0;
   padding: 36px;
-  max-width: calc(100vw - (36px * 2));
+  /* max-width: calc(100vw - (36px * 2)); */
   max-height: calc(100vh - (36px * 2));
+  max-width: 80ch;
+  width: 100%;
 }
 
 .published {
@@ -103,7 +128,7 @@ a qp-avatar {
 
 #comment-popup > div > header {
   background: var(--col-N0);
-  border-bottom: 1px solid var(--col-N40);
+  /* border-bottom: 1px solid var(--col-N40); */
   padding-bottom: 8px;
   padding-top: 36px;
 }
@@ -114,8 +139,8 @@ a qp-avatar {
   height: 36px;
   width: 100%;
   position: absolute;
-  bottom: -37px;
-  background: linear-gradient(to bottom, var(--col-N0), transparent);
+  bottom: -36px;
+  background: linear-gradient(to bottom, var(--col-N40) 1px, var(--col-N0) 1px, var(--col-N0) 4px, transparent);
 }
 
 /* #comment-popup form {
@@ -214,8 +239,9 @@ footer .h200 {
   animation-duration: 200ms;
   animation-timing-function: ease-in-out;
 
-  width: calc(100vh - 32px);
-  height: calc(100vh - 32px);
+  width: 100%;
+  max-width: calc(100vh - 72px);
+  max-height: calc(100vh - 72px);
   z-index: 100;
   position: fixed;
   left: 50%;

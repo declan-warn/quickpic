@@ -14,7 +14,9 @@ customElements.define("qp-post", class extends HTMLElement {
 
     this.showLikes = this.showLikes.bind(this);
     this.likePost = this.likePost.bind(this);
+
     this.showComments = this.showComments.bind(this);
+    this.addComment = this.addComment.bind(this);
 
     this.expandImage = this.expandImage.bind(this);
     this.contractImage = this.contractImage.bind(this);
@@ -133,17 +135,11 @@ customElements.define("qp-post", class extends HTMLElement {
   }
 
   async showComments() {
-    const onSubmit = async (event) => {
-      event.preventDefault();
-      const input = event.currentTarget.querySelector("#new-comment");
-      const response = await api.post.comment(this.id, input.value);
-    };
-
-    const popup = create("dialog", { id: "comment-popup", class: "popup card floating" }, [
+    const popup = create("dialog", { id: "comment-popup", class: "popup card floating growing" }, [
       create("div", { onClick: event => event.stopPropagation() }, [
         create("header", { class: "sticky" }, [
           create("span", { class: "h600" }, ["Comments"]),
-          create("form", { onSubmit }, [
+          create("form", { onSubmit: this.addComment }, [
             create("label", { class: "h200", for: "new-comment" }, ["New Comment"]),
             create("input", { id: "new-comment", required: true, placeholder: "What are your thoughts?" })
           ]),
@@ -171,5 +167,34 @@ customElements.define("qp-post", class extends HTMLElement {
         popup.remove();
       }
     })
+  }
+
+  async addComment(event) {
+    event.preventDefault();
+    const input = event.currentTarget.querySelector("#new-comment");
+    const { message } = await api.post.comment(this.id, input.value);
+    if (message === "success") {
+      const { username: author } = await api.user.getCurrent();
+
+      const firstComment = this.shadowRoot.querySelector(".comment");
+      firstComment.insertAdjacentElement("beforebegin",
+        create("div", { class: "comment grow" }, [
+          create("qp-avatar", { size: "medium", user: author }),
+          create("div", { class: "comment-body" }, [
+            create("header", {}, [
+              create("a", { class: "author", href: `#/user/${author}` }, [author]),
+              author === this.getAttribute("author") && create("span", { class: "lozenge" }, ["Author"]),
+              create("time", { class: "published" }, ["Just Now"]),
+            ]),
+            create("p", {}, [input.value]),
+          ])
+        ])
+      );
+
+      input.value = "";
+      input.blur();
+
+      this.shadowRoot.querySelector("#comment-popup").scrollTo({ top: 0, left: 0, behaviour: "smooth" });
+    }
   }
 });

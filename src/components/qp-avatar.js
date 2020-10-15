@@ -9,7 +9,6 @@ customElements.define("qp-avatar", class extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
-    this.shadowRoot.append(this.constructor.stylesheet);
   }
 
   async connectedCallback() {
@@ -18,10 +17,12 @@ customElements.define("qp-avatar", class extends HTMLElement {
       this.setAttribute("user", username);
     }
 
-    this.shadowRoot.append(
-      create("div", { id: "container", class: this.getAttribute("size") || "small" }, [
-        create("img", { src: getAvatar(this.getAttribute("user")) })
-      ])
-    );
+    this.shadowRoot.appendChild(this.constructor.stylesheet).addEventListener("load", () => {
+      this.shadowRoot.append(
+        create("div", { id: "container", class: this.getAttribute("size") || "small" }, [
+          create("img", { src: getAvatar(this.getAttribute("user")) })
+        ])
+      );
+    }, true);
   }
 });
