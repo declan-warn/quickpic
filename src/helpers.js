@@ -35,7 +35,7 @@ const isPrimitive = x => x !== Object(x);
 
 export const create = (tagName, { is, style = {}, ...parameters } = {}, children = []) => {
   const el = document.createElement(tagName, { is });
-  Object.entries(style).forEach(([key, value]) => el.style[key] = value);
+  Object.entries(style).forEach(([key, value]) => el.style.setProperty(key, value));
   Object.entries(parameters).forEach(([key, value]) => {
     if (/^on[A-Z]/.test(key)) {
       el[key.toLowerCase()] = value;
@@ -99,5 +99,11 @@ export const clear = element => {
 export const showDateTime = published => {
   const timestamp = Number(published) * 1000;
   const date = new Date(timestamp);
-  return date.toLocaleString();
+  return date.toLocaleString("en-AU");
+};
+
+export const showDate = published => {
+  const timestamp = Number(published) * 1000;
+  const date = new Date(timestamp);
+  return date.toLocaleDateString("en-AU");
 };

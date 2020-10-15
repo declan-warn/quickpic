@@ -37,8 +37,6 @@ button.icon-button {
   align-items: center;
 }
 
-.button:
-
 .h600 {
   font-size: 20px;
   font-weight: 500;
@@ -76,6 +74,15 @@ button.icon-button {
   margin-top: 16px;
 }
 
+.h100 {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0;
+  color: var(--col-N200);
+  line-height: 16px;
+  margin-top: 16px;
+}
+
 .card {
   background: var(--col-N0);
   box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px, rgba(9, 30, 66, 0.31) 0px 0px 1px 0px;
@@ -99,4 +106,49 @@ a:hover {
 
 a:visited {
   color: var(--col-P400);
+}
+
+.lozenge {
+  background-color: var(--col-N40);
+  border-radius: 3px;
+  color: var(--col-N500);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  padding: 2px 4px 3px;
+  text-transform: uppercase;
+  margin-top: auto;
+}
+
+input {
+  font-family: inherit;
+  font-size: 0.875rem;
+  padding: 0.6em 0.4em;
+  border: 0px;
+  outline: none;
+  width: 100%;
+  border: 2px solid var(--col-N40);
+  background-color: var(--col-N10);
+  transition: border-color 200ms ease-in-out
+            , background-color 200ms ease-in-out;
+  border-radius: 0.2em;
+}
+
+input:not(:focus):hover {
+  background-color: var(--col-N30);
+}
+
+input:focus {
+  background-color: var(--col-N0);
+  border-color: var(--col-B100);
+}
+
+label {
+  display: inline-flex;
+  margin-bottom: 4px;
+}
+
+.sticky {
+  position: sticky;
+  top: 0px;
 }

@@ -1,4 +1,4 @@
-import { create, linkToCSS, withLoader, showDateTime } from "/src/helpers.js";
+import { create, linkToCSS, withLoader, showDateTime, getAvatar, showDate } from "/src/helpers.js";
 import api from "/src/api.js";
 
 const stylesheet = () => linkToCSS("/styles/qp-post.css");
@@ -26,6 +26,8 @@ customElements.define("qp-post", class extends HTMLElement {
 
   async connectedCallback() {
     const { id } = await api.user.getCurrent();
+
+    this.comments.sort((a, b) => Number(b.published) - Number(a.published));
 
     this.shadowRoot.appendChild(this.constructor.stylesheet).addEventListener("load", () => {
       this.shadowRoot.append(
@@ -58,11 +60,11 @@ customElements.define("qp-post", class extends HTMLElement {
             this.getAttribute("description")
           ]),
           create("footer", {}, [
-            create("a", { id: "author", href: `#/user/${this.getAttribute("author")}` }, [
+            create("a", { class: "author", href: `#/user/${this.getAttribute("author")}` }, [
               create("qp-avatar", { size: "small", user: this.getAttribute("author") }),
               this.getAttribute("author")
             ]),
-            create("time", { id: "published", class: "h200" }, [showDateTime(this.getAttribute("published"))]),
+            create("time", { class: "published" }, [showDate(this.getAttribute("published"))]),
           ])
         ])
       )
@@ -134,18 +136,33 @@ customElements.define("qp-post", class extends HTMLElement {
     const onSubmit = async (event) => {
       event.preventDefault();
       const input = event.currentTarget.querySelector("#new-comment");
-      const postId = this.closest("qp-post").getAttribute("data-post-id");
-      const response = await api.post.comment(postId, input.value);
+      const response = await api.post.comment(this.id, input.value);
     };
 
-    const list = create("div", {}, [
-      create("h3", {}, ["Comments"]),
-      create("form", { onSubmit }, [
-        create("input", { id: "new-comment", required: true })
-      ]),
-      create("slot")
+    const popup = create("dialog", { id: "comment-popup", class: "popup card floating" }, [
+      create("div", { onClick: event => event.stopPropagation() }, [
+        create("header", { class: "sticky" }, [
+          create("span", { class: "h600" }, ["Comments"]),
+          create("form", { onSubmit }, [
+            create("label", { class: "h200", for: "new-comment" }, ["New Comment"]),
+            create("input", { id: "new-comment", required: true, placeholder: "What are your thoughts?" })
+          ]),
+        ]),
+        ...this.comments.map(({ author, published, comment }) =>
+          create("div", { class: "comment" }, [
+            create("qp-avatar", { size: "medium", user: author }),
+            create("div", { class: "comment-body" }, [
+              create("header", {}, [
+                create("a", { class: "author", href: `#/user/${author}` }, [author]),
+                author === this.getAttribute("author") && create("span", { class: "lozenge" }, ["Author"]),
+                create("time", { class: "published" }, [showDate(published)]),
+              ]),
+              create("p", {}, [comment]),
+            ])
+          ])
+        )
+      ])
     ]);
-    const popup = create("dialog", { id: "like-popup" }, [list]);
 
     this.shadowRoot.append(popup);
     popup.showModal();
@@ -154,23 +171,5 @@ customElements.define("qp-post", class extends HTMLElement {
         popup.remove();
       }
     })
-  }
-});
-
-customElements.define("qp-post-comment", class extends HTMLElement {
-  constructor() {
-    super();
-    this.attachShadow({ mode: "open" });
-    this.shadowRoot.append(stylesheet());
-  }
-
-  connectedCallback() {
-    this.shadowRoot.append(
-      create("div", { class: "comment" }, [
-        create("slot", { name: "author" }),
-        create("slot", { name: "published" }),
-        create("slot", { name: "comment" }),
-      ])
-    );
   }
 });

@@ -50,6 +50,15 @@ img {
   text-overflow: ellipsis;
 }
 
+a, a:visited {
+  font-weight: 500;
+  color: var(--col-N800);
+}
+
+a:hover {
+  color: var(--col-B400);
+}
+
 a qp-avatar {
   margin-right: 8px;
 }
@@ -64,9 +73,98 @@ a qp-avatar {
   padding: 1em;
 }
 
+.popup {
+  min-width: 80ch;
+  border: 0px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  padding: 36px;
+  max-width: calc(100vw - (36px * 2));
+  max-height: calc(100vh - (36px * 2));
+}
+
+.published {
+  margin: 0;
+  color: var(--col-N500);
+}
+
+#comment-popup {
+  padding: 0;
+  overflow-y: auto;
+}
+
+#comment-popup > div {
+  height: 100%;
+  padding: 0 36px 36px;
+}
+
+#comment-popup > div > header {
+  background: var(--col-N0);
+  border-bottom: 1px solid var(--col-N40);
+  padding-bottom: 8px;
+  padding-top: 36px;
+}
+
+#comment-popup > div > header::after {
+  content: "";
+  display: block;
+  height: 36px;
+  width: 100%;
+  position: absolute;
+  bottom: -37px;
+  background: linear-gradient(to bottom, var(--col-N0), transparent);
+}
+
+/* #comment-popup form {
+  margin-top: 36px;
+} */
+
 .comment {
   display: flex;
+  padding: 0;
+  margin-top: 36px;
+}
+
+.comment-body {
+  display: flex;
   flex-direction: column;
+}
+
+.comment qp-avatar {
+  margin-right: 8px;
+}
+
+.comment p {
+  margin: 4px 0 0 0;
+}
+
+.comment header {
+  display: flex;
+  align-items: center;
+}
+
+.comment header > * + * {
+  margin-left: 8px;
+}
+
+.separator {
+  font-size: 8px;
+}
+
+.comment .separator {
+  font-size: 4px;
+  margin: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  color: var(--col-N200);
+}
+
+#actions .separator {
+  margin-left: 12px;
+  margin-right: 6px;
 }
 
 #actions {
@@ -94,12 +192,6 @@ a qp-avatar {
 
 #actions #like:active {
   background-color: var(--col-R50);
-}
-
-#actions .separator {
-  font-size: 6px;
-  margin-left: 12px;
-  margin-right: 6px;
 }
 
 #description {
