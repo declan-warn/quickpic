@@ -14,6 +14,7 @@ customElements.define("qp-post", class extends HTMLElement {
 
     this.showLikes = this.showLikes.bind(this);
     this.likePost = this.likePost.bind(this);
+    this.showComments = this.showComments.bind(this);
 
     this.expandImage = this.expandImage.bind(this);
     this.contractImage = this.contractImage.bind(this);
@@ -26,40 +27,46 @@ customElements.define("qp-post", class extends HTMLElement {
   async connectedCallback() {
     const { id } = await api.user.getCurrent();
 
-    this.shadowRoot.append(
-      this.constructor.stylesheet,
-      create("div", { id: "container", class: "card" }, [
-        create("div", { id: "frame" }, [
-          create("img", { id: "image", src: this.getAttribute("src") }),
-          create("button", { onClick: this.expandImage, class: "icon-button" }, [
-            create("ion-icon", { name: "expand" })
+    this.shadowRoot.appendChild(this.constructor.stylesheet).addEventListener("load", () => {
+      this.shadowRoot.append(
+        create("div", { id: "container", class: "card" }, [
+          create("div", { id: "frame" }, [
+            create("img", { id: "image", src: this.getAttribute("src") }),
+            create("button", { onClick: this.expandImage, class: "icon-button" }, [
+              create("ion-icon", { name: "expand" })
+            ])
+          ]),
+          create("div", { id: "actions" }, [
+            create("button", { onClick: this.likePost, id: "like", class: "icon-button" }, [
+              create("ion-icon", {
+                name: this.likes.includes(id) ? "heart" : "heart-outline"
+              }),
+            ]),
+            create("span", { onClick: this.showLikes }, [String(this.likes.length)]),
+            create("ion-icon", { class: "separator", name: "ellipse" }),
+            create("button", { onClick: this.showComments, class: "icon-button" }, [
+              create("ion-icon", { name: "chatbubble-outline" })
+            ]),
+            create("span", {}, [String(this.comments.length)])
+          ]),
+          create("span", {
+            onClick: this.showComments,
+            id: "description",
+            class: "h400",
+            title: this.getAttribute("description")
+          }, [
+            this.getAttribute("description")
+          ]),
+          create("footer", {}, [
+            create("a", { id: "author", href: `#/user/${this.getAttribute("author")}` }, [
+              create("qp-avatar", { size: "small", user: this.getAttribute("author") }),
+              this.getAttribute("author")
+            ]),
+            create("time", { id: "published", class: "h200" }, [showDateTime(this.getAttribute("published"))]),
           ])
-        ]),
-        create("div", { id: "actions" }, [
-          create("button", { onClick: this.likePost, id: "like", class: "icon-button" }, [
-            create("ion-icon", {
-              name: this.likes.includes(id) ? "heart" : "heart-outline"
-            }),
-          ]),
-          create("span", { onClick: this.showLikes }, [String(this.likes.length)]),
-          create("ion-icon", { class: "separator", name: "ellipse" }),
-          create("button", { class: "icon-button" }, [
-            create("ion-icon", { name: "chatbubble-outline" })
-          ]),
-          create("span", {}, [String(this.comments.length)])
-        ]),
-        create("span", { id: "description", class: "h400", title: this.getAttribute("description") }, [
-          this.getAttribute("description")
-        ]),
-        create("footer", {}, [
-          create("a", { id: "author", href: `#/user/${this.getAttribute("author")}` }, [
-            create("qp-avatar", { size: "small", user: this.getAttribute("author") }),
-            this.getAttribute("author")
-          ]),
-          create("time", { id: "published", class: "h200" }, [showDateTime(this.getAttribute("published"))]),
         ])
-      ])
-    );
+      )
+    }, true);
   }
 
   async expandImage() {
@@ -77,6 +84,11 @@ customElements.define("qp-post", class extends HTMLElement {
     clone.style.setProperty("--expandStatHeight", `${Math.round(rect.height)}px`);
     img.insertAdjacentElement("beforebegin", clone);
     clone.showModal();
+    clone.addEventListener("click", ({ path }) => {
+      if (path[0] === clone) {
+        this.contractImage();
+      }
+    });
     img.style.visibility = "hidden";
     img.nextSibling.style.visibility = "hidden";
     clone.classList.add("expanded", "floating", "card");
@@ -117,49 +129,6 @@ customElements.define("qp-post", class extends HTMLElement {
     event.target.blur();
     console.log(await api.post.like(this.id));
   }
-});
-
-customElements.define("qp-post-comment", class extends HTMLElement {
-  constructor() {
-    super();
-    this.attachShadow({ mode: "open" });
-    this.shadowRoot.append(stylesheet());
-  }
-
-  connectedCallback() {
-    this.shadowRoot.append(
-      create("div", { class: "comment" }, [
-        create("slot", { name: "author" }),
-        create("slot", { name: "published" }),
-        create("slot", { name: "comment" }),
-      ])
-    );
-  }
-});
-
-customElements.define("qp-post-comments", class extends HTMLElement {
-  constructor() {
-    super();
-    this.attachShadow({ mode: "open" });
-    this.shadowRoot.append(stylesheet());
-
-    this.showComments = this.showComments.bind(this);
-  }
-
-  get comments() {
-    return this.querySelectorAll("qp-post-comment");
-  }
-
-  connectedCallback() {
-    this.shadowRoot.append(
-      create("div", { onClick: this.showComments, class: "action" }, [
-        create("button", { class: "material-icons-outlined" }, ["forum"]),
-        create("span", { class: "badge" }, [
-          String(this.comments.length)
-        ])
-      ])
-    );
-  }
 
   async showComments() {
     const onSubmit = async (event) => {
@@ -186,8 +155,22 @@ customElements.define("qp-post-comments", class extends HTMLElement {
       }
     })
   }
+});
 
-  async handleClick(event) {
-    this.showComments();
-  };
+customElements.define("qp-post-comment", class extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: "open" });
+    this.shadowRoot.append(stylesheet());
+  }
+
+  connectedCallback() {
+    this.shadowRoot.append(
+      create("div", { class: "comment" }, [
+        create("slot", { name: "author" }),
+        create("slot", { name: "published" }),
+        create("slot", { name: "comment" }),
+      ])
+    );
+  }
 });

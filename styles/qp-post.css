@@ -1,8 +1,14 @@
 @import "/styles/base.css";
 
-/*
-* Stylesheet is applied to shadow-dom elements which is why ids are used
-*/
+@keyframes grow {
+  from {
+    transform: scale(0, 0);
+  }
+
+  to {
+    transform: scale(100%, 100%);
+  }
+}
 
 #container {
   display: flex;
@@ -10,6 +16,9 @@
   height: 100%;
   width: 100%;
   padding: 8px;
+  animation-name: grow;
+  animation-duration: 400ms;
+  animation-timing-function: ease-in-out;
 }
 
 #frame {
@@ -187,4 +196,8 @@ footer .h200 {
     top: var(--expandStartTop);
     transform: translate(0%, 0%);
   }
+}
+
+:host(qp-post) {
+
 }

@@ -66,6 +66,9 @@ aside button:not(:active):hover {
 .post {
   display: flex;
   flex-direction: column;
+  /* justify-self: center;
+  align-self: center;
+  width: 100%; */
 }
 
 .post img {
