@@ -32,30 +32,6 @@ const putJSON = (path, payload) =>
     body: JSON.stringify(payload),
   });
 
-/**
- * This is a sample class API which you may base your code on.
- * You may use this as a launch pad but do not have to.
- */
-// export default class API {
-//   /** @param {String} url */
-//   constructor(url) {
-//     this.url = url;
-//   }
-
-//   /** @param {String} path */
-//   makeAPIRequest(path) {
-//     return getJSON(`${this.url}/${path}`);
-//   }
-
-//   login(payload) {
-//     return postJSON(`${this.url}/auth/login`, payload);
-//   }
-
-//   signup(payload) {
-//     return postJSON(`${this.url}/auth/signup`, payload);
-//   }
-// }
-
 const useEndpoint = url => {
   const auth = {};
   auth.login = payload =>
@@ -70,6 +46,8 @@ const useEndpoint = url => {
     getJSON(`${url}/user?id=${id}`);
   user.getCurrent = () =>
     getJSON(`${url}/user`);
+  user.update = payload =>
+    putJSON(`${url}/user`, payload);
   user.feed = () =>
     getJSON(`${url}/user/feed`);
   user.follow = username =>

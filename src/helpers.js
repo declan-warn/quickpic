@@ -35,7 +35,13 @@ const isPrimitive = x => x !== Object(x);
 
 export const create = (tagName, { is, style = {}, ...parameters } = {}, children = []) => {
   const el = document.createElement(tagName, { is });
-  Object.entries(style).forEach(([key, value]) => el.style.setProperty(key, value));
+  Object.entries(style).forEach(([key, value]) => {
+    if (/^--/.test(key)) {
+      el.style.setProperty(key, value)
+    } else {
+      el.style[key] = value;
+    }
+  });
   Object.entries(parameters).forEach(([key, value]) => {
     if (/^on[A-Z]/.test(key)) {
       el[key.toLowerCase()] = value;

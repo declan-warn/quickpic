@@ -16,7 +16,8 @@
 }
 
 .profile-card {
-  width: 360px;
+  display: inline-block;
+  /* max-width: 360px; */
   /* padding: 24px; */
 }
 
@@ -43,6 +44,10 @@
 
 .profile-card-body {
   padding: 24px 24px 24px calc(24px + 18px + 96px);
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 8px;
+  column-gap: 24px;
 }
 
 .profile-card-info {
@@ -54,7 +59,8 @@
 }
 
 .profile-card-info + .profile-card-info {
-  margin-top: 8px;
+  /* margin-top: 8px; */
+  /* margin-left: 24px; */
 }
 
 .profile-card-info ion-icon {

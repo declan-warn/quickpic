@@ -96,8 +96,8 @@ a qp-avatar {
   padding: 1em;
 }
 
+/*
 .popup {
-  /* min-width: 80ch; */
   border: 0px;
   position: fixed;
   top: 50%;
@@ -105,11 +105,11 @@ a qp-avatar {
   transform: translate(-50%, -50%);
   margin: 0;
   padding: 36px;
-  /* max-width: calc(100vw - (36px * 2)); */
   max-height: calc(100vh - (36px * 2));
   max-width: 80ch;
   width: 100%;
 }
+*/
 
 .published {
   margin: 0;

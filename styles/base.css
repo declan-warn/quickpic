@@ -12,6 +12,28 @@ body {
   /* color: var(--col-N800); */
 }
 
+form button {
+  font-family: inherit;
+  border-radius: 3px;
+  background-color: var(--col-B400);
+  color: var(--col-N0);
+  padding: 0 10px;
+  height: 32px;
+  font-weight: 500;
+  border: none;
+  outline: none;
+  transition: background-color 100ms ease-out;
+}
+
+form button:hover {
+  cursor: pointer;
+  background-color: var(--col-B300);
+}
+
+form button:active {
+  background-color: var(--col-B500);
+}
+
 button {
   border: none;
   outline: none;
@@ -209,4 +231,48 @@ label {
 
 .side-bar button:active {
   background-color: var(--col-B50);
+}
+
+.popup {
+  border: 0px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  padding: 0;
+  max-height: calc(100vh - (36px * 2));
+  max-width: 80ch;
+  width: 100%;
+}
+
+.popup-body {
+  padding: 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+
+.no-margin {
+  margin: 0;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  width: 100%;
+}
+
+.help-text {
+  font-size: 12px;
+  color: var(--col-N200);
+  margin-top: 4px;
+  line-height: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.help-text ion-icon {
+  margin-right: 4px;
 }

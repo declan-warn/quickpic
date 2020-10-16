@@ -26,24 +26,25 @@ customElements.define("qp-profile", class extends HTMLElement {
 
     this.follow = this.follow.bind(this);
     this.unfollow = this.unfollow.bind(this);
+    this.editProfile = this.editProfile.bind(this);
   }
 
   async connectedCallback() {
-    this.user = await api.user.getCurrent();
-    this.currentUser = await api.user.getCurrent();
+    [this.user, this.currentUser] = await Promise.all([api.user.getCurrent(), api.user.getCurrent()]);
+    // this.currentUser = await api.user.getCurrent();
+
+    [this.posts, this.following] =
+      await Promise.all([
+        Promise.all(this.user.posts.map(api.post.get)),
+        Promise.all(this.user.following.map(api.user.getById)),
+      ]);
+
+    this.following.sort();
 
     this.shadowRoot.appendChild(this.stylesheet).addEventListener("load", () => {
       this.render();
-
-      Promise.all(this.user.posts.map(api.post.get)).then(posts => {
-        this.posts = posts;
-        this.renderPosts();
-      });
-
-      Promise.all(this.user.following.map(api.user.getById)).then(following => {
-        this.following = following.sort();
-        this.renderFollowing();
-      });
+      this.renderPosts();
+      this.renderFollowing();
     }, true);
   }
 
@@ -57,15 +58,20 @@ customElements.define("qp-profile", class extends HTMLElement {
     this.shadowRoot.append(
       create("div", { id: "profile" }, [
         create("aside", { class: "side-bar" }, [
-          this.currentUser.following.includes(this.user.id)
-            ? create("button", { onClick: this.unfollow, class: "action" }, [
-              create("ion-icon", { name: "person-remove-outline" }),
-              "Unfollow",
+          this.currentUser.id === this.user.id
+            ? create("button", { onClick: this.editProfile, class: "action" }, [
+              create("ion-icon", { name: "build-outline" }),
+              "Edit profile",
             ])
-            : create("button", { onClick: this.follow, class: "action" }, [
-              create("ion-icon", { name: "person-add-outline" }),
-              "Follow",
-            ]),
+            : this.currentUser.following.includes(this.user.id)
+              ? create("button", { onClick: this.unfollow, class: "action" }, [
+                create("ion-icon", { name: "person-remove-outline" }),
+                "Unfollow",
+              ])
+              : create("button", { onClick: this.follow, class: "action" }, [
+                create("ion-icon", { name: "person-add-outline" }),
+                "Follow",
+              ]),
           create("span", { id: "following", class: "h300" }, [
             "Following",
             create("ion-icon", { name: "people-outline" })
@@ -92,7 +98,13 @@ customElements.define("qp-profile", class extends HTMLElement {
               ]),
               create("div", { class: "profile-card-info" }, [
                 create("ion-icon", { name: "heart-circle" }),
-                create("span", {}, ["TODO likes"]),
+                create("span", {}, [
+                  `${String(this.posts.reduce((post, count) => count + post.meta.likes.length, 0))} likes`
+                ]),
+              ]),
+              create("div", { class: "profile-card-info" }, [
+                create("ion-icon", { name: "list-circle" }),
+                create("span", {}, [`${String(this.posts.length)} posts`]),
               ]),
             ])
           ]),
@@ -118,6 +130,7 @@ customElements.define("qp-profile", class extends HTMLElement {
   }
 
   renderFollowing() {
+    console.log(this.following);
     this.shadowRoot.querySelector(".side-bar").append(
       ...this.following.map(({ username }) =>
         create("a", { href: `#/profile/${username}` }, [
@@ -133,5 +146,59 @@ customElements.define("qp-profile", class extends HTMLElement {
 
   async unfollow() {
     console.log(await api.user.unfollow(this.user.username));
+  }
+
+  editProfile() {
+    const closePopup = () => {
+      this.shadowRoot.getElementById("edit-profile").remove();
+    };
+
+    const handleClick = event => {
+      if (event.target.matches("dialog")) {
+        closePopup();
+      }
+    }
+
+    const handleSubmit = async (event) => {
+      event.preventDefault();
+
+      const formData = new FormData(this.shadowRoot.querySelector("form"));
+      const payload = Object.fromEntries(formData.entries());
+
+      if (payload.password === "") {
+        delete payload.password;
+      }
+
+      console.log(await api.user.update(payload));
+
+      closePopup();
+    };
+
+    const popup = create("dialog", { onClick: handleClick, id: "edit-profile", class: "popup card floating" }, [
+      create("div", { class: "popup-body" }, [
+        create("span", { class: "h600 no-margin" }, ["Your information"]),
+        create("form", { onSubmit: handleSubmit }, [
+          create("label", { for: "name", class: "h200" }, ["Name"]),
+          create("input", { id: "name", name: "name", placeholder: "John Smith", value: this.currentUser.name }),
+          create("label", { for: "email", class: "h200" }, ["Email"]),
+          create("input", {
+            id: "email",
+            type: "email",
+            name: "email",
+            placeholder: "john.smith@example.com",
+            value: this.currentUser.email
+          }),
+          create("label", { for: "password", class: "h200" }, ["New password"]),
+          create("input", { id: "password", type: "password", name: "password", placeholder: "•".repeat(10) }),
+          create("span", { class: "help-text" }, [
+            create("ion-icon", { name: "information-circle" }),
+            "Leave blank if you do not wish to change your password"
+          ]),
+          create("button", { style: { marginTop: "16px" } }, ["Save"]),
+        ])
+      ])
+    ]);
+    this.shadowRoot.append(popup);
+    popup.showModal();
   }
 });
