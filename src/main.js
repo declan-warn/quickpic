@@ -23,6 +23,7 @@ const main = document.querySelector("main").append(
     ]),
     create("qp-route", { path: "/", component: "qp-app" }, [
       create("qp-route", { path: "user", component: "qp-profile" }),
+      create("qp-route", { path: "user/:username", component: "qp-profile" }),
       create("qp-route", { path: "feed", component: "qp-feed" }),
     ]),
     create("qp-route", { default: true, redirect: "/feed" })

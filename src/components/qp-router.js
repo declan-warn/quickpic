@@ -61,9 +61,17 @@ customElements.define("qp-route", class extends HTMLElement {
     const component = this.getAttribute("component");
     const child = [...this.children].find(child => child.matchesRoute(tail))?.render(tail) ?? "";
 
+    const attributes = {};
+
+    if (/\/:\w+$/.test(path)) {
+      const [head, tail] = path.split("/:");
+      const value = route.slice(head.length + 1);
+      attributes[tail] = value;
+    }
+
     return (
       component
-        ? create(component, {}, [child])
+        ? create(component, attributes, [child])
         : child
     );
   }
@@ -74,7 +82,13 @@ customElements.define("qp-route", class extends HTMLElement {
     const isExact = path === route;
     const isPartial = route.startsWith(path) && this.childMatchesRoute(route.slice(path.length));
 
-    return isDefault || isExact || isPartial;
+    let withParam = false;
+    if (/\/:\w+$/.test(path)) {
+      const [head] = path.split("/:");
+      withParam = route.startsWith(head);
+    }
+
+    return isDefault || isExact || isPartial || withParam;
   }
 
   childMatchesRoute(route) {
