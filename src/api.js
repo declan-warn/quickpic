@@ -72,6 +72,10 @@ const useEndpoint = url => {
     getJSON(`${url}/user`);
   user.feed = () =>
     getJSON(`${url}/user/feed`);
+  user.follow = username =>
+    putJSON(`${url}/user/follow?username=${username}`);
+  user.unfollow = username =>
+    putJSON(`${url}/user/unfollow?username=${username}`);
 
   const post = {};
   post.comment = (postId, comment) =>

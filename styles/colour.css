@@ -7,6 +7,7 @@
   --col-N500: #42526E;
   --col-N200: #6B778C;
 
+  --col-N60: #B3BAC5;
   --col-N50: #C1C7D0;
   --col-N40: #DFE1E6;
   --col-N30: #EBECF0;
@@ -31,4 +32,5 @@
 
   /* Purples */
   --col-P400: #5243AA;
+  --col-P300: #6554C0;
 }

@@ -12,6 +12,10 @@
   --dim: 32px;
 }
 
+#container.xlarge {
+  --dim: 96px;
+}
+
 #container.xxlarge {
   --dim: 128px;
 }

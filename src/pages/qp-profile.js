@@ -11,99 +11,127 @@ const showDateTime = published => {
 };
 
 customElements.define("qp-profile", class extends HTMLElement {
-  static get stylesheet() {
-    return linkToCSS("/styles/qp-profile.css");
-  }
+  stylesheet = linkToCSS("/styles/qp-profile.css");
+  stylesheetLoaded =
+    new Promise((resolve) => this.stylesheet.addEventListener("load", resolve, true));
 
   constructor() {
     super();
 
     this.attachShadow({ mode: "open" });
-    this.shadowRoot.append(this.constructor.stylesheet);
 
     if (!this.getAttribute("data-username")) {
       // TODO:
     }
+
+    this.follow = this.follow.bind(this);
+    this.unfollow = this.unfollow.bind(this);
   }
 
   async connectedCallback() {
-    this.render({ isLoading: true });
     this.user = await api.user.getCurrent();
-    this.render({ isLoading: false });
+    this.currentUser = await api.user.getCurrent();
 
-    this.posts = await Promise.all(this.user.posts.map(api.post.get));
-    this.renderPosts();
+    this.shadowRoot.appendChild(this.stylesheet).addEventListener("load", () => {
+      this.render();
+
+      Promise.all(this.user.posts.map(api.post.get)).then(posts => {
+        this.posts = posts;
+        this.renderPosts();
+      });
+
+      Promise.all(this.user.following.map(api.user.getById)).then(following => {
+        this.following = following.sort();
+        this.renderFollowing();
+      });
+    }, true);
   }
 
-  render({ isLoading }) {
-    this.clear();
+  awaitLoaded() {
+    return this.shadowRoot.readyState === "complete"
+      ? Promise.resolve()
+      : new Promise((resolve) => this.stylesheet.addEventListener("load", resolve, true));
+  }
 
-    if (isLoading) {
-      this.shadowRoot.append(
-        create("div", {}, ["loading..."])
-      );
-    } else {
-      this.shadowRoot.append(
-        create("div", { id: "profile" }, [
-          create("section", { id: "info" }, [
-            create("qp-avatar", { size: "xxlarge" }),
-            create("h1", {}, [this.user.username]),
-            create("table", {}, [
-              create("tr", {}, [
-                create("th", {}, ["Name"]),
-                create("td", {}, [
-                  create("input", { value: this.user.username })
-                ])
+  render() {
+    this.shadowRoot.append(
+      create("div", { id: "profile" }, [
+        create("aside", { class: "side-bar" }, [
+          this.currentUser.following.includes(this.user.id)
+            ? create("button", { onClick: this.unfollow, class: "action" }, [
+              create("ion-icon", { name: "person-remove-outline" }),
+              "Unfollow",
+            ])
+            : create("button", { onClick: this.follow, class: "action" }, [
+              create("ion-icon", { name: "person-add-outline" }),
+              "Follow",
+            ]),
+          create("span", { id: "following", class: "h300" }, [
+            "Following",
+            create("ion-icon", { name: "people-outline" })
+          ]),
+        ]),
+        create("div", { class: "content" }, [
+          create("div", { class: "profile-card card" }, [
+            create("header", {}, [
+              create("qp-avatar", { user: this.user.username, size: "xlarge" }),
+              create("span", {}, [this.user.username]),
+            ]),
+            create("div", { class: "profile-card-body" }, [
+              this.user.name && create("div", { class: "profile-card-info" }, [
+                create("ion-icon", { name: "person-circle" }),
+                create("span", {}, [this.user.name]),
               ]),
-              create("tr", {}, [
-                create("th", {}, ["Email"]),
-                create("td", {}, [
-                  create("input", { value: this.user.email })
-                ])
+              this.user.email && create("div", { class: "profile-card-info" }, [
+                create("ion-icon", { name: "at-circle" }),
+                create("span", {}, [this.user.email]),
               ]),
-              create("tr", {}, [
-                create("th", {}, ["Password"]),
-                create("td", {}, [
-                  create("input", { value: "password", type: "password" })
-                ])
-              ])
+              create("div", { class: "profile-card-info" }, [
+                create("ion-icon", { name: "people-circle" }),
+                create("span", {}, [`${this.user.followed_num} followers`]),
+              ]),
+              create("div", { class: "profile-card-info" }, [
+                create("ion-icon", { name: "heart-circle" }),
+                create("span", {}, ["TODO likes"]),
+              ]),
             ])
           ]),
-          create("section", { id: "posts", class: "post-list" }, ["loading..."])
+          create("div", { class: "post-list" }, [])
         ])
-      );
-    }
+      ])
+    );
   }
 
   renderPosts() {
-    const parent = this.shadowRoot.getElementById("posts");
-    while (parent.hasChildNodes()) {
-      parent.lastChild.remove();
-    }
-    parent.append(...this.posts.map(post =>
-      create("qp-post", { class: "post", "data-post-id": post.id }, [
-        create("h2", { slot: "description" }, [post.meta.description_text]),
-        create("img", { slot: "image", src: `data:image/png;base64,${post.src}` }),
-        create("span", { slot: "author" }, [post.meta.author]),
-        create("time", { slot: "published" }, [showDateTime(post.meta.published)]),
-        create("qp-post-likes", { slot: "likes" }, post.meta.likes.map(like =>
-          create("qp-post-like", { user: like })
-        )),
-        create("qp-post-comments", { slot: "comments" }, post.comments.map(comment =>
-          create("qp-post-comment", {}, [
-            create("span", { slot: "author" }, [comment.author]),
-            create("span", { slot: "published" }, [showDateTime(comment.published)]),
-            create("span", { slot: "comment" }, [comment.comment]),
-          ])
-        )),
-      ])
+    this.shadowRoot.querySelector(".post-list").append(...this.posts.map(post =>
+      create("qp-post", {
+        class: "post",
+        "data-post-id": post.id,
+        description: post.meta.description_text,
+        src: `data:image/png;base64,${post.src}`,
+        published: post.meta.published,
+        author: post.meta.author,
+        likes: post.meta.likes,
+        comments: post.comments,
+      })
     ));
   }
 
-  clear() {
-    while (this.shadowRoot.hasChildNodes()) {
-      this.shadowRoot.lastChild.remove();
-    }
-    this.shadowRoot.append(this.constructor.stylesheet);
+  renderFollowing() {
+    this.shadowRoot.querySelector(".side-bar").append(
+      ...this.following.map(({ username }) =>
+        create("a", { href: `#/profile/${username}` }, [
+          create("button", {}, [username])
+        ])
+      )
+    );
+  }
+
+  async follow() {
+    console.log(await api.user.follow(this.user.username));
+  }
+
+  async unfollow() {
+    console.log(await api.user.unfollow(this.user.username));
   }
 });

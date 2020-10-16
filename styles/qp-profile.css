@@ -1,23 +1,68 @@
-@import "/styles/style.css";
+@import "/styles/base.css";
+@import "/styles/qp-feed.css";
 
 #profile {
   display: flex;
   flex-direction: row;
 }
 
-#info {
-  background-color: var(--col-B300);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 400px;
-  padding: 64px;
-}
-
-#info h1 {
-  color: var(--col-N0);
-}
-
-#posts {
+.content {
   flex-grow: 1;
+  padding: 16px;
+}
+
+.post-list {
+  flex-grow: 1;
+}
+
+.profile-card {
+  width: 360px;
+  /* padding: 24px; */
+}
+
+.profile-card header {
+  background: var(--col-P300);
+  padding: 24px 24px 12px 24px;
+  position: relative;
+  height: 96px;
+  display: flex;
+}
+
+.profile-card header span {
+  color: var(--col-N0);
+  margin-top: 12px;
+  margin-left: 18px;
+  font-size: 18px;
+  line-height: 24px;
+}
+
+.profile-card header qp-avatar {
+  /* position: absolute; */
+  bottom: 0;
+}
+
+.profile-card-body {
+  padding: 24px 24px 24px calc(24px + 18px + 96px);
+}
+
+.profile-card-info {
+  /* font-size: 12px; */
+  line-height: 24px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+}
+
+.profile-card-info + .profile-card-info {
+  margin-top: 8px;
+}
+
+.profile-card-info ion-icon {
+  color: var(--col-N60);
+  font-size: 16px;
+  margin-right: 8px;
+}
+
+.profile-card-info span {
+  font-size: 12px;
 }

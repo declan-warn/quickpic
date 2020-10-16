@@ -98,7 +98,7 @@ a {
   align-items: center;
   color: var(--col-B400);
   text-decoration: none;
-  height: 1em;
+  /* height: 1em; */
 }
 
 a:hover {
@@ -152,4 +152,61 @@ label {
 .sticky {
   position: sticky;
   top: 0px;
+}
+
+.side-bar {
+  background: var(--col-N20);
+  width: 240px;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.side-bar span {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.side-bar a {
+  text-decoration: none;
+}
+
+.side-bar button {
+  padding: 8px 12px;
+  border-radius: 3px;
+  background-color: transparent;
+  height: 40px;
+  text-align: left;
+  color: var(--col-N500);
+  width: 100%;
+}
+
+.side-bar button.action {
+  height: 64px;
+  display: inline-flex;
+  align-items: center;
+  font-weight: 500;
+}
+
+.side-bar button.action ion-icon {
+  background: var(--col-T300);
+  color: var(--col-N0);
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;
+  border-radius: 3px;
+  border: 8px solid var(--col-T300);
+}
+
+.side-bar button:hover {
+  background-color: var(--col-N30);
+}
+
+.side-bar button:active {
+  background-color: var(--col-B50);
 }
