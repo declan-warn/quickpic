@@ -1,5 +1,6 @@
 import { create, getAvatar, linkToCSS } from "/src/helpers.js";
 import api from "/src/api.js";
+import { navigateTo } from "/src/components/qp-router.js";
 
 import "/src/components/qp-avatar.js";
 import "/src/components/qp-post.js";
@@ -20,18 +21,22 @@ customElements.define("qp-profile", class extends HTMLElement {
 
     this.attachShadow({ mode: "open" });
 
-    if (!this.getAttribute("data-username")) {
-      // TODO:
-    }
-
     this.follow = this.follow.bind(this);
     this.unfollow = this.unfollow.bind(this);
     this.editProfile = this.editProfile.bind(this);
   }
 
   async connectedCallback() {
-    [this.user, this.currentUser] = await Promise.all([api.user.getCurrent(), api.user.getCurrent()]);
-    // this.currentUser = await api.user.getCurrent();
+    if (!this.getAttribute("username")) {
+      const { username } = await api.user.getCurrent();
+      return navigateTo(`user/${username}`);
+    }
+
+    [this.user, this.currentUser] = await Promise.all([
+      api.user.getByUsername(this.getAttribute("username")),
+      api.user.getCurrent()
+    ]);
+
 
     [this.posts, this.following] =
       await Promise.all([
@@ -99,7 +104,7 @@ customElements.define("qp-profile", class extends HTMLElement {
               create("div", { class: "profile-card-info" }, [
                 create("ion-icon", { name: "heart-circle" }),
                 create("span", {}, [
-                  `${String(this.posts.reduce((post, count) => count + post.meta.likes.length, 0))} likes`
+                  `${String(this.posts.reduce((count, { meta: { likes } }) => count + likes.length, 0))} likes`
                 ]),
               ]),
               create("div", { class: "profile-card-info" }, [
@@ -133,7 +138,7 @@ customElements.define("qp-profile", class extends HTMLElement {
     console.log(this.following);
     this.shadowRoot.querySelector(".side-bar").append(
       ...this.following.map(({ username }) =>
-        create("a", { href: `#/profile/${username}` }, [
+        create("a", { href: `#/user/${username}` }, [
           create("button", {}, [username])
         ])
       )
