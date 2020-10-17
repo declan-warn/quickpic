@@ -12,6 +12,36 @@ body {
   /* color: var(--col-N800); */
 }
 
+.button {
+  display: inline-flex;
+  vertical-align: middle;
+  justify-content: center;
+  font-family: inherit;
+  border-radius: 3px;
+  background-color: rgba(9, 30, 66, 0.04);
+  color: var(--col-N500)!important;
+  padding: 0 10px;
+  font-weight: 500;
+  border: none;
+  outline: none;
+  transition: background-color 100ms ease-out;
+  line-height: 32px;
+  height: 32px;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: rgba(9, 30, 66, 0.08);
+  text-decoration: inherit;
+  transition-duration: 0s, 0.15s;
+}
+
+.button:active {
+  background: rgba(179, 212, 255, 0.6);
+  transition-duration: 0s, 0s;
+  color: var(--col-B400)!important;
+}
+
 form button {
   font-family: inherit;
   border-radius: 3px;
@@ -35,6 +65,7 @@ form button:active {
 }
 
 button {
+  display: inline-block;
   border: none;
   outline: none;
   border-radius: 3px;
@@ -275,4 +306,13 @@ form {
 
 .help-text ion-icon {
   margin-right: 4px;
+}
+
+.button-group {
+  display: flex;
+  align-items: center;
+}
+
+.button-group * + * {
+  margin-left: 4px;
 }

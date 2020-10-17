@@ -1,6 +1,23 @@
-@import "/styles/style.css";
+@import "/styles/base.css";
 
-form {
-  padding: 1em;
-  max-width: 80ch;
+.auth__container {
+  padding: 36px;
+  /* width: 100%; */
+  /* max-width: 80ch; */
+  /* position: fixed; */
+  /* top: 50%; */
+  /* left: 50%; */
+  /* transform: translate(-50%, -50%); */
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.auth__container .h600 {
+  margin: 0;
+}
+
+.auth__backdrop {
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--col-N30);
 }

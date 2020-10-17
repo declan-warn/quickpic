@@ -20,16 +20,24 @@ customElements.define("qp-signup", class extends HTMLElement {
 
   connectedCallback() {
     this.shadowRoot.append(
-      create("div", undefined, [
-        create("form", { id: "signup", onSubmit: this.handleSubmit }, [
-          create("h2", {}, ["Sign Up"]),
-          TextField("username", { label: "Username", required: true }),
-          TextField("password", { label: "Password", required: true }),
-          TextField("email", { label: "E-mail" }),
-          TextField("name", { label: "Name" }),
-          create("button", {}, ["Submit"])
-        ]),
-        create("a", { href: "#/auth/login" }, ["Log In"])
+      create("div", { class: "auth__backdrop" }, [
+        create("div", { class: "floating card popup auth__container" }, [
+          create("form", { id: "signup", onSubmit: this.handleSubmit }, [
+            create("span", { class: "h600" }, ["Sign Up"]),
+            create("label", { for: "username", class: "h200" }, ["Username"]),
+            create("input", { id: "username", name: "username", required: true }),
+            create("label", { for: "password", class: "h200" }, ["Password"]),
+            create("input", { id: "password", name: "password", type: "password", required: true }),
+            create("label", { for: "email", class: "h200" }, ["Email"]),
+            create("input", { id: "email", name: "email", type: "email" }),
+            create("label", { for: "name", class: "h200" }, ["Name"]),
+            create("input", { id: "name", name: "name" }),
+            create("div", { class: "button-group", style: { marginTop: "16px" } }, [
+              create("button", {}, ["Submit"]),
+              create("a", { href: "#/auth/login", class: "button" }, ["Log In"]),
+            ]),
+          ]),
+        ])
       ])
     )
   }

@@ -20,14 +20,20 @@ customElements.define("qp-login", class extends HTMLElement {
 
   connectedCallback() {
     this.shadowRoot.append(
-      create("div", {}, [
-        create("form", { id: "login", onSubmit: this.handleSubmit }, [
-          create("h2", {}, ["Log In"]),
-          TextField("username", { label: "Username", required: true }),
-          TextField("password", { label: "Password", required: true }),
-          create("button", {}, ["Submit"])
-        ]),
-        create("a", { href: "#/auth/signup" }, ["Sign Up"])
+      create("div", { class: "auth__backdrop" }, [
+        create("div", { class: "card floating popup auth__container" }, [
+          create("form", { id: "login", onSubmit: this.handleSubmit }, [
+            create("span", { class: "h600" }, ["Log In"]),
+            create("label", { for: "username", class: "h200" }, ["Username"]),
+            create("input", { id: "username", name: "username", required: true }),
+            create("label", { for: "password", class: "h200" }, ["Password"]),
+            create("input", { id: "password", name: "password", type: "password", required: true }),
+            create("div", { class: "button-group", style: { marginTop: "16px" } }, [
+              create("button", {}, ["Submit"]),
+              create("a", { href: "#/auth/signup", class: "button" }, ["Sign Up"]),
+            ])
+          ]),
+        ])
       ])
     )
   }
