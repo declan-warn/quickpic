@@ -14,6 +14,8 @@ customElements.define("qp-post", class extends HTMLElement {
 
     this.showLikes = this.showLikes.bind(this);
     this.likePost = this.likePost.bind(this);
+    this.unlikePost = this.unlikePost.bind(this);
+    this.toggleLike = this.toggleLike.bind(this);
 
     this.showComments = this.showComments.bind(this);
     this.addComment = this.addComment.bind(this);
@@ -27,7 +29,8 @@ customElements.define("qp-post", class extends HTMLElement {
   }
 
   async connectedCallback() {
-    const { id } = await api.user.getCurrent();
+    this.currentUser = await api.user.getCurrent();
+    const { id } = this.currentUser;
 
     this.comments.sort((a, b) => Number(b.published) - Number(a.published));
 
@@ -41,10 +44,19 @@ customElements.define("qp-post", class extends HTMLElement {
             ])
           ]),
           create("div", { id: "actions" }, [
-            create("button", { onClick: this.likePost, id: "like", class: "icon-button" }, [
-              create("ion-icon", {
-                name: this.likes.includes(id) ? "heart" : "heart-outline"
-              }),
+            // this.likes.includes(id)
+            //   ? create("button", { onClick: this.unlikePost, id: "unlike", class: "icon-button" }, [
+            //     create("ion-icon", { name: "heart" })
+            //   ])
+            //   : create("button", { onClick: this.likePost, id: "like", class: "icon-button" }, [
+            //     create("ion-icon", { name: "heart-outline" }),
+            //   ]),
+            create("button", {
+              onClick: this.toggleLike,
+              id: "like",
+              class: `icon-button ${this.likes.includes(id) ? "active" : ""}`,
+            }, [
+              create("ion-icon", { name: this.likes.includes(id) ? "heart" : "heart-outline" })
             ]),
             create("span", { onClick: this.showLikes }, [String(this.likes.length)]),
             create("ion-icon", { class: "separator", name: "ellipse" }),
@@ -130,8 +142,27 @@ customElements.define("qp-post", class extends HTMLElement {
   }
 
   async likePost(event) {
-    event.target.blur();
+    // event.target.blur();
     console.log(await api.post.like(this.id));
+    this.likes = this.likes.concat(this.currentUser.id);
+  }
+
+  async unlikePost(event) {
+    // event.target.blur();
+    console.log(await api.post.unlike(this.id));
+    this.likes = this.likes.filter(id => id !== this.currentUser.id);
+  }
+
+  async toggleLike(event) {
+    const button = event.currentTarget;
+    if (this.likes.includes(this.currentUser.id)) {
+      await this.unlikePost(event);
+    } else {
+      await this.likePost(event);
+    }
+
+    button.classList.toggle("active");
+    button.children[0].name = this.likes.includes(this.currentUser.id) ? "heart" : "heart-outline";
   }
 
   async showComments() {

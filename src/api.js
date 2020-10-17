@@ -60,6 +60,8 @@ const useEndpoint = url => {
     putJSON(`${url}/post/comment?id=${postId}`, { comment });
   post.like = postId =>
     putJSON(`${url}/post/like?id=${postId}`);
+  post.unlike = postId =>
+    putJSON(`${url}/post/unlike?id=${postId}`);
   post.get = postId =>
     getJSON(`${url}/post?id=${postId}`);
 

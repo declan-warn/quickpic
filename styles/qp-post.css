@@ -211,12 +211,17 @@ a qp-avatar {
   background-color: var(--col-B50);
 }
 
-#like ion-icon[name="heart"] {
+#like.active ion-icon[name="heart"] {
   color: var(--col-R300);
+}
+
+#actions #like {
+  transition: all 200ms ease-in-out;
 }
 
 #actions #like:active {
   background-color: var(--col-R50);
+  color: var(--col-R300);
 }
 
 #description {
