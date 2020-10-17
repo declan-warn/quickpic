@@ -162,7 +162,7 @@ customElements.define("qp-post", class extends HTMLElement {
     }
 
     button.classList.toggle("active");
-    button.children[0].name = this.likes.includes(this.currentUser.id) ? "heart" : "heart-outline";
+    button.children[0].setAttribute("name", this.likes.includes(this.currentUser.id) ? "heart" : "heart-outline");
   }
 
   async showComments() {
