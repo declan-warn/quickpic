@@ -23,9 +23,6 @@ customElements.define("qp-app", class extends HTMLElement {
     this.shadowRoot.append(
       create("div", { id: "container" }, [
         create("qp-nav", {}, [
-          // create("qp-nav-link", { slot: "logo" }, [
-          //   create("ion-icon", { name: "aperture-outline", size: "large" })
-          // ]),
           create("qp-nav-link", { slot: "primary", "aria-label": "feed" }, [
             create("a", { href: "#/feed" }, [
               create("ion-icon", { name: "grid" })
@@ -33,6 +30,11 @@ customElements.define("qp-app", class extends HTMLElement {
           ]),
           create("qp-nav-link", { slot: "primary", "aria-label": "search users" }, [
             create("ion-icon", { name: "search" })
+          ]),
+          create("qp-nav-link", { slot: "secondary", "aria-label": "sign out" }, [
+            create("a", { href: "#/auth/signout" }, [
+              create("ion-icon", { name: "log-out-outline" })
+            ])
           ]),
           create("qp-nav-link", { slot: "secondary", "aria-label": "profile" }, [
             create("a", { href: "#/user" }, [
