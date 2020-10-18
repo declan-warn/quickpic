@@ -321,12 +321,20 @@ footer .h200 {
   }
 }
 
-.button.edit {
+#actions .button-group {
   margin-left: auto;
+}
+
+.button.edit {
   display: inline-flex;
   align-items: center;
 }
 
 .button.edit ion-icon {
   margin-right: 4px;
+}
+
+.button.delete {
+  display: inline-flex;
+  align-items: center;
 }

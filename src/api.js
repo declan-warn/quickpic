@@ -32,6 +32,9 @@ const putJSON = (path, payload) =>
     body: JSON.stringify(payload),
   });
 
+const del = (path) =>
+  getJSON(path, { method: "DELETE" });
+
 const useEndpoint = url => {
   const auth = {};
   auth.login = payload =>
@@ -68,6 +71,8 @@ const useEndpoint = url => {
     postJSON(`${url}/post`, payload);
   post.edit = (postId, payload) =>
     putJSON(`${url}/post?id=${postId}`, payload);
+  post.delete = postId =>
+    del(`${url}/post?id=${postId}`);
 
   return { auth, user, post };
 };

@@ -26,6 +26,7 @@ customElements.define("qp-post", class extends HTMLElement {
     this.contractImage = this.contractImage.bind(this);
 
     this.edit = this.edit.bind(this);
+    this.confirmDelete = this.confirmDelete.bind(this);
   }
 
   get id() {
@@ -64,8 +65,13 @@ customElements.define("qp-post", class extends HTMLElement {
             ]),
             create("span", {}, [String(this.comments.length)]),
             this.currentUser.posts.includes(this.id) && (
-              create("button", { onClick: this.edit, class: "button edit" }, [
-                create("span", {}, ["Edit"]),
+              create("div", { class: "button-group" }, [
+                create("button", { onClick: this.edit, class: "button edit" }, [
+                  create("span", {}, ["Edit"]),
+                ]),
+                create("button", { onClick: this.confirmDelete, class: "button delete" }, [
+                  create("ion-icon", { name: "trash" })
+                ]),
               ])
             )
           ]),
@@ -236,7 +242,6 @@ customElements.define("qp-post", class extends HTMLElement {
   async edit() {
     const saveChanges = async (event) => {
       event.preventDefault();
-      console.log(event.currentTarget);
       const data = new FormData(event.currentTarget);
       const payload = Object.fromEntries(data.entries());
 
@@ -257,6 +262,23 @@ customElements.define("qp-post", class extends HTMLElement {
           required: true,
         }),
         create("button", { style: { marginTop: "16px" } }, ["Save"])
+      ])
+    ]);
+    this.shadowRoot.append(modal);
+    modal.showModal();
+  }
+
+  confirmDelete() {
+    const deletePost = async (event) => {
+      await api.post.delete(this.id);
+      modal.close();
+    };
+
+    const modal = create("qp-popup", { heading: "You're about to delete this post", appearance: "danger" }, [
+      create("p", {}, ["This action is permanent. You will not be able to recover your post after deletion."]),
+      create("div", { class: "button-group" }, [
+        create("button", { onClick: deletePost, class: "button" }, ["Delete"]),
+        create("button", { onClick: () => modal.close(), class: "button" }, ["Cancel"]),
       ])
     ]);
     this.shadowRoot.append(modal);
