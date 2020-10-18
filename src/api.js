@@ -64,6 +64,8 @@ const useEndpoint = url => {
     putJSON(`${url}/post/unlike?id=${postId}`);
   post.get = postId =>
     getJSON(`${url}/post?id=${postId}`);
+  post.new = payload =>
+    postJSON(`${url}/post`, payload);
 
   return { auth, user, post };
 };
