@@ -1,6 +1,7 @@
 import { create, linkToCSS } from "/src/helpers.js";
 
 import { navigateTo } from "/src/components/qp-router.js";
+import api from "/src/api.js";
 
 import "/src/components/qp-dropdown.js";
 
@@ -15,7 +16,7 @@ customElements.define("qp-app", class extends HTMLElement {
     this.shadowRoot.append(this.constructor.stylesheet);
   }
 
-  connectedCallback() {
+  async connectedCallback() {
     if (!sessionStorage.getItem("token")) {
       return navigateTo("/auth/login");
     }
@@ -45,5 +46,27 @@ customElements.define("qp-app", class extends HTMLElement {
         create("slot")
       ])
     );
+
+    this.currentUser = await api.user.getCurrent();
+    const start = Date.now();
+    const notified = new Set();
+    const poll = async () => {
+      const { posts } = await api.user.feed();
+      const newPosts = new Set();
+      for (const post of posts) {
+        if (!notified.has(post.id) && Number(post.meta.published) * 1000 > start) {
+          newPosts.add(post);
+        } else {
+          break;
+        }
+      }
+      for (const post of newPosts) {
+        console.log("NEW POST:", post);
+        // TODO: notify
+        notified.add(post.id);
+      }
+      window.setTimeout(poll, 2500);
+    };
+    poll();
   }
 });
