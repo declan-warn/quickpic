@@ -1,5 +1,7 @@
-const navStyle = new CSSStyleSheet();
-navStyle.replaceSync(`
+import { css } from "/src/helpers.js";
+
+export default css`
+
 :host {
   position: sticky;
   top: 0px;
@@ -76,6 +78,4 @@ button ::slotted(a) {
   }
 }
 
-`);
-
-export default navStyle;
+`;
