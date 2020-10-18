@@ -1,6 +1,8 @@
 import { create, linkToCSS, withLoader, showDateTime, getAvatar, showDate } from "/src/helpers.js";
 import api from "/src/api.js";
 
+import "/src/components/qp-popup.js";
+
 const stylesheet = () => linkToCSS("/styles/qp-post.css");
 
 customElements.define("qp-post", class extends HTMLElement {
@@ -22,15 +24,19 @@ customElements.define("qp-post", class extends HTMLElement {
 
     this.expandImage = this.expandImage.bind(this);
     this.contractImage = this.contractImage.bind(this);
+
+    this.edit = this.edit.bind(this);
   }
 
   get id() {
-    return this.getAttribute("data-post-id");
+    return Number(this.getAttribute("data-post-id"));
   }
 
   async connectedCallback() {
     this.currentUser = await api.user.getCurrent();
     const { id } = this.currentUser;
+
+    console.log(this.currentUser, this.id);
 
     this.comments.sort((a, b) => Number(b.published) - Number(a.published));
 
@@ -44,13 +50,6 @@ customElements.define("qp-post", class extends HTMLElement {
             ])
           ]),
           create("div", { id: "actions" }, [
-            // this.likes.includes(id)
-            //   ? create("button", { onClick: this.unlikePost, id: "unlike", class: "icon-button" }, [
-            //     create("ion-icon", { name: "heart" })
-            //   ])
-            //   : create("button", { onClick: this.likePost, id: "like", class: "icon-button" }, [
-            //     create("ion-icon", { name: "heart-outline" }),
-            //   ]),
             create("button", {
               onClick: this.toggleLike,
               id: "like",
@@ -63,7 +62,12 @@ customElements.define("qp-post", class extends HTMLElement {
             create("button", { onClick: this.showComments, class: "icon-button" }, [
               create("ion-icon", { name: "chatbubble-outline" })
             ]),
-            create("span", {}, [String(this.comments.length)])
+            create("span", {}, [String(this.comments.length)]),
+            this.currentUser.posts.includes(this.id) && (
+              create("button", { onClick: this.edit, class: "button edit" }, [
+                create("span", {}, ["Edit"]),
+              ])
+            )
           ]),
           create("span", {
             onClick: this.showComments,
@@ -227,5 +231,35 @@ customElements.define("qp-post", class extends HTMLElement {
 
       this.shadowRoot.querySelector("#comment-popup").scrollTo({ top: 0, left: 0, behaviour: "smooth" });
     }
+  }
+
+  async edit() {
+    const saveChanges = async (event) => {
+      event.preventDefault();
+      console.log(event.currentTarget);
+      const data = new FormData(event.currentTarget);
+      const payload = Object.fromEntries(data.entries());
+
+      if (payload.description_text !== this.getAttribute("description")) {
+        await api.post.edit(this.id, payload);
+      }
+
+      modal.close();
+    };
+
+    const modal = create("qp-popup", { heading: "Edit post" }, [
+      create("form", { onSubmit: saveChanges }, [
+        create("label", { for: "desc", class: "h200" }, ["Description"]),
+        create("input", {
+          id: "desc",
+          name: "description_text",
+          value: this.getAttribute("description"),
+          required: true,
+        }),
+        create("button", { style: { marginTop: "16px" } }, ["Save"])
+      ])
+    ]);
+    this.shadowRoot.append(modal);
+    modal.showModal();
   }
 });

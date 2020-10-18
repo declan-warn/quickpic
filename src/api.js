@@ -66,6 +66,8 @@ const useEndpoint = url => {
     getJSON(`${url}/post?id=${postId}`);
   post.new = payload =>
     postJSON(`${url}/post`, payload);
+  post.edit = (postId, payload) =>
+    putJSON(`${url}/post?id=${postId}`, payload);
 
   return { auth, user, post };
 };

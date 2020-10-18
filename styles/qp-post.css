@@ -321,6 +321,12 @@ footer .h200 {
   }
 }
 
-:host(qp-post) {
+.button.edit {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+}
 
+.button.edit ion-icon {
+  margin-right: 4px;
 }
