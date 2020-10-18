@@ -66,7 +66,7 @@ customElements.define("qp-profile", class extends HTMLElement {
           this.currentUser.id === this.user.id
             ? create("button", { onClick: this.editProfile, class: "action" }, [
               create("ion-icon", { name: "build-outline" }),
-              "Edit profile",
+              "Update",
             ])
             : this.currentUser.following.includes(this.user.id)
               ? create("button", { onClick: this.unfollow, class: "action" }, [

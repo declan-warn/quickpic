@@ -9,6 +9,7 @@
 .content {
   flex-grow: 1;
   padding: 16px;
+  width: 100%;
 }
 
 .post-list {
@@ -45,7 +46,8 @@
 .profile-card-body {
   padding: 24px 24px 24px calc(24px + 18px + 96px);
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  /* flex-wrap: wrap; */
   row-gap: 8px;
   column-gap: 24px;
 }
@@ -75,4 +77,8 @@
 
 .post-list {
   padding: 16px 0;
+}
+
+@media (min-width: 768px) {
+  
 }

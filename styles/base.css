@@ -3,6 +3,7 @@
 
 body {
   color: var(--col-N800);
+  --desktop-breakpoint: 100px;
 }
 
 body.modal-open {
@@ -222,6 +223,7 @@ label {
   padding: 16px;
   display: flex;
   flex-direction: column;
+  flex-shrink: 1;
 }
 
 .side-bar span {

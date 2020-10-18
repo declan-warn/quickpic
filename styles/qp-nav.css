@@ -1,23 +1,29 @@
 @import "/styles/icon-font.css";
 
+:host {
+  position: sticky;
+  top: 0px;
+  z-index: 1000;
+}
+
 nav {
-  height: 100vh;
+  height: 64px;
+  width: 100%;
   background: var(--col-B500);
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: space-between;
   align-items: center;
   box-sizing: border-box;
-  padding: 24px 0;
+  padding: 0 24px;
   position: sticky;
   top: 0px;
-  width: 64px;
   z-index: 100;
 }
 
 nav > div {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
 }
 
@@ -56,4 +62,16 @@ button ::slotted(a) {
   justify-content: center;
   align-items: center;
 }
+
+@media (min-width: 768px) {
+  nav {
+    height: 100vh;
+    width: 64px;
+    flex-direction: column;
+    padding: 24px 0;
+  }
+
+  nav > div {
+    flex-direction: column;
+  }
 }

@@ -1,4 +1,11 @@
 #container {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-rows: auto 1fr;
+}
+
+@media (min-width: 768px) {
+  #container {
+    grid-template-rows: none;
+    grid-template-columns: auto 1fr;
+  }
 }
