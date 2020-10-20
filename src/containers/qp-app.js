@@ -14,6 +14,11 @@ customElements.define("qp-app", class extends HTMLElement {
     super();
     this.attachShadow({ mode: "open" });
     this.shadowRoot.append(this.constructor.stylesheet);
+
+    this.start = Date.now();
+    this.notified = new Set();
+
+    this.poll = this.poll.bind(this);
   }
 
   async connectedCallback() {
@@ -44,25 +49,26 @@ customElements.define("qp-app", class extends HTMLElement {
     );
 
     this.currentUser = await api.user.getCurrent();
-    const start = Date.now();
-    const notified = new Set();
-    const poll = async () => {
-      const { posts } = await api.user.feed();
-      const newPosts = new Set();
-      for (const post of posts) {
-        if (!notified.has(post.id) && Number(post.meta.published) * 1000 > start) {
-          newPosts.add(post);
-        } else {
-          break;
-        }
+    this.nextPoll = window.setTimeout(this.poll, 0);
+  }
+
+  async poll() {
+    if (!this.isConnected) return;
+
+    const { posts } = await api.user.feed();
+    const newPosts = new Set();
+    for (const post of posts) {
+      if (!this.notified.has(post.id) && Number(post.meta.published) * 1000 > this.start) {
+        newPosts.add(post);
+      } else {
+        break;
       }
-      for (const post of newPosts) {
-        console.log("NEW POST:", post);
-        // TODO: notify
-        notified.add(post.id);
-      }
-      window.setTimeout(poll, 2500);
-    };
-    poll();
+    }
+    for (const post of newPosts) {
+      console.log("NEW POST:", post);
+      // TODO: notify
+      this.notified.add(post.id);
+    }
+    this.nextPoll = window.setTimeout(this.poll, 2500);
   }
 });

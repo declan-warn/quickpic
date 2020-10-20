@@ -37,8 +37,6 @@ customElements.define("qp-post", class extends HTMLElement {
     this.currentUser = await api.user.getCurrent();
     const { id } = this.currentUser;
 
-    console.log(this.currentUser, this.id);
-
     this.comments.sort((a, b) => Number(b.published) - Number(a.published));
 
     this.shadowRoot.appendChild(this.constructor.stylesheet).addEventListener("load", () => {
