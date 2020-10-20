@@ -37,7 +37,7 @@ customElements.define("qp-post", class extends HTMLElement {
     this.comments.sort((a, b) => Number(b.published) - Number(a.published));
 
     this.shadowRoot.append(
-      create("div", { id: "container", class: "card post__container" }, [
+      create("div", { class: "card post__container" }, [
         create("div", { class: "post__frame" }, [
           create("img", { id: "image", class: "post__image", src: this.getAttribute("src") }),
         ]),
@@ -82,7 +82,7 @@ customElements.define("qp-post", class extends HTMLElement {
         create("footer", { class: "post__footer" }, [
           create("button", {
             class: "post__author",
-            href: `#/user/${this.getAttribute("author")}`,
+            onClick: () => navigateTo(`/user/${this.getAttribute("author")}`),
             appearance: "link",
             title: "View Profile"
           }, [

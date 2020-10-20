@@ -4,9 +4,22 @@ const gap = "8px";
 
 export default css`
 
+@keyframes post--grow {
+  from {
+    transform: scale(0, 0);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1, 1);
+    opacity: 1;
+  }
+}
+
 .post__container {
   display: flex;
   flex-direction: column;
+  animation: post--grow 200ms ease-in-out;
   padding: ${gap};
 }
 

@@ -5,6 +5,8 @@ import api from "/src/api.js";
 import "/src/components/qp-post.js";
 import "/src/components/qp-popup.js";
 
+import baseStyle from "/src/styles/base.css.js";
+
 customElements.define("qp-feed", class extends HTMLElement {
   static get stylesheet() {
     return linkToCSS("/styles/qp-feed.css");
@@ -15,6 +17,7 @@ customElements.define("qp-feed", class extends HTMLElement {
 
     this.attachShadow({ mode: "open" });
     this.shadowRoot.append(this.constructor.stylesheet);
+    this.shadowRoot.adoptedStyleSheets = [baseStyle];
 
     this.newPost = this.newPost.bind(this);
     this.filterByUser = this.filterByUser.bind(this);
