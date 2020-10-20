@@ -77,6 +77,16 @@ export const css = (fragments, ...interpolations) => {
   return sheet;
 }
 
+export const mergeCSS = (...sheets) => {
+  const merged = new CSSStyleSheet();
+  for (const sheet of sheets) {
+    for (const rule of sheet.cssRules) {
+      merged.insertRule(rule.cssText, merged.cssRules.length);
+    }
+  }
+  return merged;
+};
+
 export const linkToCSS = href =>
   create("link", { href, rel: "stylesheet" });
 

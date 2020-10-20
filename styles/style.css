@@ -9,10 +9,19 @@
   display: none;
 }
 
+html {
+  --page-background: var(--col-N0);
+}
+
+html[auth] {
+  --page-background: var(--col-N30);
+}
+
 html, body {
   margin: 0;
   padding: 0;
-  background-color: var(--col-N0);
+  /* background-color: var(--col-N0); */
+  background-color: var(--page-background);
   color: var(--col-N800);
   height: 100%;
   font-family: "Segoe UI";

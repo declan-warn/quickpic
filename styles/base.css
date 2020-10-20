@@ -1,5 +1,9 @@
 @import "/styles/colour.css";
 
+html {
+  height: 100%;
+}
+
 body {
   color: var(--col-N800);
   --desktop-breakpoint: 100px;
@@ -18,7 +22,7 @@ body.modal-open {
   /* color: var(--col-N800); */
 }
 
-.button {
+/* .button {
   display: inline-flex;
   vertical-align: middle;
   justify-content: center;
@@ -85,7 +89,7 @@ button:hover {
 
 button:active {
   background-color: var(--col-B50);
-}
+} */
 
 button.icon-button {
   width: 40px;
@@ -96,7 +100,7 @@ button.icon-button {
   align-items: center;
 }
 
-.h600 {
+/* .h600 {
   font-size: 20px;
   font-weight: 500;
   letter-spacing: -0.008em;
@@ -140,7 +144,7 @@ button.icon-button {
   color: var(--col-N200);
   line-height: 16px;
   margin-top: 16px;
-}
+} */
 
 .card {
   background: var(--col-N0);
@@ -180,7 +184,7 @@ a:visited {
   margin-top: auto;
 }
 
-input {
+/* input {
   font-family: inherit;
   font-size: 0.875rem;
   padding: 0.6em 0.4em;
@@ -201,7 +205,7 @@ input:not(:focus):hover {
 input:focus {
   background-color: var(--col-N0);
   border-color: var(--col-B100);
-}
+} */
 
 label {
   display: inline-flex;
@@ -293,14 +297,14 @@ label[required]::after {
   margin: 0;
 }
 
-form {
+/* form {
   display: flex;
   flex-direction: column;
   align-items: start;
   width: 100%;
-}
+} */
 
-.help-text {
+/* .help-text {
   font-size: 12px;
   color: var(--col-N200);
   margin-top: 4px;
@@ -316,7 +320,7 @@ form {
 
 .help-text[appearance=error] {
   color: var(--col-R400);
-}
+} */
 
 .button-group {
   display: flex;

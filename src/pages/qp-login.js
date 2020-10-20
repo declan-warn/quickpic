@@ -1,39 +1,45 @@
-import { create, css, linkToCSS } from "/src/helpers.js";
+import { create } from "/src/helpers.js";
 import api from "/src/api.js";
 import { navigateTo } from "/src/components/qp-router.js";
 
-customElements.define("qp-login", class extends HTMLElement {
-  static get stylesheet() {
-    return linkToCSS("/styles/qp-auth.css");
-  }
+import baseStyle from "/src/styles/base.css.js";
+import authStyle from "/src/styles/auth.css.js";
 
+import "/src/components/qp-banner.js";
+
+customElements.define("qp-login", class extends HTMLElement {
   constructor() {
     super();
 
     this.attachShadow({ mode: "open" });
-    this.shadowRoot.append(this.constructor.stylesheet);
+    this.shadowRoot.adoptedStyleSheets = [baseStyle, authStyle];
 
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   connectedCallback() {
     this.shadowRoot.append(
-      create("div", { class: "auth__backdrop" }, [
-        create("div", { class: "card floating popup auth__container" }, [
-          create("form", { id: "login", onSubmit: this.handleSubmit }, [
-            create("span", { class: "h600" }, ["Log In"]),
-            create("label", { for: "username", class: "h200" }, ["Username"]),
-            create("input", { id: "username", name: "username", required: true }),
-            create("label", { for: "password", class: "h200" }, ["Password"]),
-            create("input", { id: "password", name: "password", type: "password", required: true }),
-            create("div", { class: "button-group", style: { marginTop: "16px" } }, [
-              create("button", {}, ["Submit"]),
-              create("a", { href: "#/auth/signup", class: "button" }, ["Sign Up"]),
-            ])
+      create("div", { class: "auth__container" }, [
+        create("form", { id: "login", class: "floating card auth__form", onSubmit: this.handleSubmit }, [
+          create("h1", { class: "auth__title h600" }, ["Log In"]),
+          create("span", { class: "auth__description" }, ["Sign in to catch up on what you've missed"]),
+          create("label", { for: "username", class: "h200", required: true }, ["Username"]),
+          create("input", { id: "username", name: "username", required: true }),
+          create("label", { for: "password", class: "h200", required: true }, ["Password"]),
+          create("input", { id: "password", name: "password", type: "password", required: true }),
+          create("div", { class: "button-group", style: { marginTop: "16px" } }, [
+            create("button", { appearance: "primary" }, ["Submit"]),
+            create("button", { onClick: () => navigateTo("/auth/signup"), appearance: "subtle" }, ["Sign Up"]),
           ]),
         ])
       ])
-    )
+    );
+
+    document.documentElement.setAttribute("auth", "");
+  }
+
+  disconnectedCallback() {
+    document.documentElement.removeAttribute("auth");
   }
 
   async handleSubmit(event) {
@@ -43,13 +49,18 @@ customElements.define("qp-login", class extends HTMLElement {
     const data = new FormData(form);
     const payload = Object.fromEntries(data.entries());
 
-    const { token, message } = await api.auth.login(payload);
-    console.log(token, message);
-    if (token) {
-      sessionStorage.setItem("token", token);
-      navigateTo("feed");
-    } else {
+    const response = await api.auth.login(payload);
 
+    switch (response.status) {
+      case 200:
+        sessionStorage.setItem("token", response.token);
+        navigateTo("/feed");
+        break;
+
+      case 403:
+        if (!this.shadowRoot.querySelector("qp-banner")) {
+          this.shadowRoot.prepend(create("qp-banner", { appearance: "error" }, [response.message]));
+        }
     }
   }
 });
