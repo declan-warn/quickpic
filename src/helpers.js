@@ -33,6 +33,9 @@ export function fileToDataUrl(file) {
 // <https://stackoverflow.com/a/31538091>
 const isPrimitive = x => x !== Object(x);
 
+const isBool = x =>
+  typeof x === "boolean";
+
 export const create = (tagName, { is, style = {}, ...parameters } = {}, children = []) => {
   const el = document.createElement(tagName, { is });
   Object.entries(style).forEach(([key, value]) => {
@@ -45,6 +48,10 @@ export const create = (tagName, { is, style = {}, ...parameters } = {}, children
   Object.entries(parameters).forEach(([key, value]) => {
     if (/^on[A-Z]/.test(key)) {
       el[key.toLowerCase()] = value;
+    } else if (isBool(value)) {
+      if (value) {
+        el.setAttribute(key, "");
+      }
     } else if (isPrimitive(value)) {
       el.setAttribute(key, value);
     } else {
@@ -57,7 +64,14 @@ export const create = (tagName, { is, style = {}, ...parameters } = {}, children
   return el;
 };
 
-export const css = rules => {
+export const css = (fragments, ...interpolations) => {
+  const rules =
+    fragments.reduce((acc, fragment, i) =>
+      i < interpolations.length
+        ? acc.concat([fragment, interpolations[i]])
+        : acc.concat(fragment)
+      , []).join("");
+
   const sheet = new CSSStyleSheet();
   sheet.replaceSync(rules);
   return sheet;

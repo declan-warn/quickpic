@@ -4,7 +4,11 @@
   /* Neutrals */
   --col-N900: #091E42;
   --col-N800: #172B4D;
+  --col-N700: #253858;
+  --col-N600: #344563;
   --col-N500: #42526E;
+  --col-N400: #505F79;
+  --col-N300: #5E6C84;
   --col-N200: #6B778C;
 
   --col-N60: #B3BAC5;
@@ -16,6 +20,8 @@
   --col-N0: #FFFFFF;
   
   /* Reds */
+  --col-R500: #BF2600;
+  --col-R400: #DE350B;
   --col-R300: #FF5630;
   --col-R50: #FFEBE6;
 

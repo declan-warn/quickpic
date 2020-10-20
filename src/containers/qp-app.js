@@ -4,6 +4,7 @@ import { navigateTo } from "/src/components/qp-router.js";
 import api from "/src/api.js";
 
 import "/src/components/qp-dropdown.js";
+import "/src/components/qp-flag.js";
 
 customElements.define("qp-app", class extends HTMLElement {
   static get stylesheet() {
@@ -55,6 +56,7 @@ customElements.define("qp-app", class extends HTMLElement {
   async poll() {
     if (!this.isConnected) return;
 
+
     const { posts } = await api.user.feed();
     const newPosts = new Set();
     for (const post of posts) {
@@ -65,10 +67,22 @@ customElements.define("qp-app", class extends HTMLElement {
       }
     }
     for (const post of newPosts) {
-      console.log("NEW POST:", post);
-      // TODO: notify
+      this.notify(post);
       this.notified.add(post.id);
     }
     this.nextPoll = window.setTimeout(this.poll, 2500);
+  }
+
+  notify(post) {
+    const flag = create("qp-flag", {
+      icon: "information-circle",
+      heading: "New Content!",
+      description: `${post.meta.author} just made a new post.`,
+      appearance: "info",
+      actions: [
+        { content: "Check it out", onClick: () => { navigateTo("/feed") } }
+      ]
+    });
+    this.shadowRoot.append(flag);
   }
 });
