@@ -30,6 +30,7 @@ customElements.define("qp-router", class extends HTMLElement {
     const route = window.location.hash.replace(/^#/, "");
     for (const child of this.children) {
       if (child.matches("qp-route") && child.matchesRoute(route)) {
+        console.log("MATCHING:", child);
         this.append(child.render(route));
         break;
       }
@@ -51,7 +52,10 @@ customElements.define("qp-route", class extends HTMLElement {
   }
 
   render(route) {
-    if (this.hasAttribute("redirect")) {
+    const hasRedirect = this.hasAttribute("redirect");
+    const hasRequirement = this.hasOwnProperty("require");
+
+    if (hasRedirect && !(hasRequirement && this.meetsRequirement())) {
       return navigateTo(this.getAttribute("redirect"));
     }
 
@@ -88,11 +92,15 @@ customElements.define("qp-route", class extends HTMLElement {
       withParam = route.startsWith(head);
     }
 
-    return isDefault || isExact || isPartial || withParam;
+    return (isDefault || isExact || isPartial || withParam);
   }
 
   childMatchesRoute(route) {
     return [...this.children].some(child => child?.matchesRoute(route));
+  }
+
+  meetsRequirement() {
+    return this.require?.() ?? true;
   }
 
   isDefault() {

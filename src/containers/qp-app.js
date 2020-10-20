@@ -17,10 +17,6 @@ customElements.define("qp-app", class extends HTMLElement {
   }
 
   async connectedCallback() {
-    if (!sessionStorage.getItem("token")) {
-      return navigateTo("/auth/login");
-    }
-
     this.shadowRoot.append(
       create("div", { id: "container" }, [
         create("qp-nav", {}, [
