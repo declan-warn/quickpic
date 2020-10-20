@@ -2,8 +2,6 @@ import { create, css, linkToCSS } from "/src/helpers.js";
 import api from "/src/api.js";
 import { navigateTo } from "/src/components/qp-router.js";
 
-import TextField from "/src/components/TextField.js";
-
 customElements.define("qp-login", class extends HTMLElement {
   static get stylesheet() {
     return linkToCSS("/styles/qp-auth.css");

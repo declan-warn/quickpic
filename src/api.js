@@ -11,8 +11,8 @@ const getJSON = (path, options) =>
       "Authorization": `Token ${sessionStorage.getItem("token")}`
     }
   })
-    .then(res => res.json())
-    .catch(err => console.warn(`API_ERROR: ${err.message}`));
+    .then(async res => ({ ...await res.json(), status: res.status }))
+    .catch(err => console.warn(`API_ERROR: ${err.message}`))
 
 const postJSON = (path, payload) =>
   getJSON(path, {

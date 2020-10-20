@@ -208,6 +208,12 @@ label {
   margin-bottom: 4px;
 }
 
+label[required]::after {
+  content: "*";
+  color: var(--col-R400);
+  margin-left: 2px;
+}
+
 .sticky {
   position: sticky;
   top: 0px;
@@ -305,6 +311,11 @@ form {
 
 .help-text ion-icon {
   margin-right: 4px;
+  font-size: 16px;
+}
+
+.help-text[appearance=error] {
+  color: var(--col-R400);
 }
 
 .button-group {
