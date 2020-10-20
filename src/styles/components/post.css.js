@@ -1,0 +1,170 @@
+import { css } from "/src/helpers.js";
+
+const gap = "8px";
+
+export default css`
+
+.post__container {
+  display: flex;
+  flex-direction: column;
+  padding: ${gap};
+}
+
+.post__frame {
+  position: relative;
+  width: 100%;
+  background: var(--col-N20);
+  border-radius: 1.5px;
+  overflow: hidden;
+  margin-bottom: ${gap};
+}
+
+.post__frame::after {
+  content: "";
+  display: block;
+  padding-bottom: 100%;
+}
+
+.post__image {
+  max-width: 100%;
+  max-height: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.post__action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.post__action {
+  border-radius: 50%;
+  padding: 8px;
+}
+
+.post__action[aria-label=like] .post__action__icon,
+.post__action[aria-label=unlike] .post__action__icon {
+  display: none;
+}
+
+.post__action[aria-label=unlike] {
+  color: var(--col-R400);
+}
+
+.post__action[aria-label=like]:hover,
+.post__action[aria-label=unlike]:hover {
+  background: var(--col-R50);
+}
+
+.post__action[aria-label=like]:active,
+.post__action[aria-label=unlike]:active {
+  background: var(--col-R75);
+  color: var(--col-R400);
+}
+
+.post__action[aria-label=like] .post__action__icon[name="heart-outline"] {
+  display: inline-block;
+}
+
+.post__action[aria-label=unlike] .post__action__icon[name="heart"] {
+  display: inline-block;
+}
+
+.post__action-separator {
+  font-size: 4px;
+  margin: 0 8px;
+  color: var(--col-N200);
+}
+
+.post__description {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: ${gap};
+}
+
+.post__footer {
+  display: flex;
+  justify-content: space-between;
+  margin: 0px calc(${gap} - 2px);
+  margin-bottom: 0px;
+}
+
+.post__author {
+  font-weight: 500;
+  color: var(--col-N800);
+}
+
+.post__author:hover {
+  color: var(--col-B400);
+}
+
+.post__avatar {
+  margin-right: 8px;
+}
+
+.post__published {
+  display: flex;
+  align-items: center;
+}
+
+.post__no-likes {
+  color: var(--col-N200);
+  margin-top: 8px;
+}
+
+.comment-list + .help-text {
+  display: none;
+  margin: 0px;
+}
+
+.comment-list:empty + .help-text {
+  display: flex;
+}
+
+.comment {
+  display: flex;
+  padding: 0;
+  margin-top: 16px;
+}
+
+.comment__body {
+  display: flex;
+  flex-direction: column;
+}
+
+.comment__body__meta {
+  display: flex;
+  align-items: center;
+}
+
+.comment__body__meta * + * {
+  margin-left: 8px;
+}
+
+.comment__avatar {
+  margin-right: 8px;
+}
+
+.comment__content {
+  margin: 4px 0 0 0;
+}
+
+.comment__form {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.comment__form .button-group {
+  margin-left: 4px;
+}
+
+#new-comment {
+  height: 32px;
+}
+
+`;

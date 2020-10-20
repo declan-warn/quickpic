@@ -172,7 +172,7 @@ a:visited {
   color: var(--col-P400);
 }
 
-.lozenge {
+/* .lozenge {
   background-color: var(--col-N40);
   border-radius: 3px;
   color: var(--col-N500);
@@ -182,7 +182,7 @@ a:visited {
   padding: 2px 4px 3px;
   text-transform: uppercase;
   margin-top: auto;
-}
+} */
 
 /* input {
   font-family: inherit;

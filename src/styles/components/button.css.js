@@ -11,11 +11,15 @@ export default css`
   margin-left: 4px;
 }
 
+.button-group[spacing=compact] button + button {
+  margin-left: 0px;
+}
+
 button {
   padding: 9px 12px;
   border-radius: 3px;
   background: rgba(9, 30, 66, 0.04);
-  transition: background-color 100ms ease-out;
+  transition: background-color 100ms ease-out, color 100ms ease-out;
   cursor: pointer;  
   line-height: 1;
   vertical-align: middle;
@@ -26,14 +30,14 @@ button {
   font-family: inherit;
   font-weight: 500;
   display: inline-flex;
-  align-items: baseline;
+  align-items: center;
 }
 
 button:hover {
   background: rgba(9, 30, 66, 0.08);
   text-decoration: inherit;
   transition-duration: 0s;
-  color: rgb(66, 82, 110);
+  color: var(--col-N500);
 }
 
 button:active {
@@ -92,6 +96,32 @@ button[appearance=link] {
   background: transparent;
   padding-left: 2px;
   padding-right: 2px;
+  color: var(--col-B400);
+}
+
+button[appearance=link]:hover {
+  color: var(--col-B300);
+  text-decoration: underline;
+}
+
+button[appearance=link]:active {
+  color: var(--col-B500);
+}
+
+button[appearance=subtle-link] {
+  background: transparent;
+  padding-left: 2px;
+  padding-right: 2px;
+  color: var(--col-N200);
+}
+
+button[appearance=subtle-link]:hover {
+  text-decoration: underline;
+  color: var(--col-N90);
+}
+
+button[appearance=subtle-link]:active {
+  color: var(--col-N400);
 }
 
 `;

@@ -22,6 +22,17 @@ const baseStyle = css`
   box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.31) 0px 0px 1px;
 }
 
+.lozenge {
+  background-color: var(--col-N40);
+  border-radius: 3px;
+  color: var(--col-N500);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  padding: 2px 4px 3px;
+  text-transform: uppercase;
+}
+
 `;
 
 export default mergeCSS(

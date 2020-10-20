@@ -12,6 +12,14 @@ export default css`
   font-family: "Segoe UI";
 }
 
+li {
+  line-height: 24px;
+}
+
+li + li {
+  margin-top: 4px;
+}
+
 .h700 {
   font-size: 24px;
   font-weight: 500;

@@ -46,6 +46,13 @@
 
 #frame {
   position: relative;
+  width: 100%;
+}
+
+#frame::after {
+  content: "";
+  display: block;
+  padding-bottom: 100%;
 }
 
 #frame > button {
@@ -62,9 +69,17 @@
 }
 
 img {
-  width: 100%;
+  max-width: 100%;
+  max-height: 100%;
   border-radius: 3px;
   margin-bottom: 8px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+dialog img {
+  position: relative;
 }
 
 #description {
@@ -244,7 +259,8 @@ footer .h200 {
   animation-duration: 200ms;
   animation-timing-function: ease-in-out;
 
-  width: 100%;
+  display: flex;
+  /* width: 100%; */
   max-width: calc(100vh - 72px);
   max-height: calc(100vh - 72px);
   z-index: 100;

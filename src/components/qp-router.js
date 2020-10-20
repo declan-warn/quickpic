@@ -4,7 +4,13 @@ export const navigateTo = route => {
   if (!route.startsWith("/")) {
     route = `/${route}`;
   }
-  window.location.hash = route;
+  if (window.location.hash === `#${route}`) {
+    console.log("RELOADING?");
+    window.location.reload();
+  } else {
+    console.log(window.location.hash, route);
+    window.location.hash = route;
+  }
 }
 
 export const getRoute = () =>

@@ -2,6 +2,10 @@ import { css } from "/src/helpers.js";
 
 export default css`
 
+:host(qp-avatar) {
+  display: flex;
+}
+
 #container.xsmall {
   --dim: 16px;
 }

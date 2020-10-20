@@ -1,18 +1,17 @@
-import { create, linkToCSS, withLoader, showDateTime, getAvatar, showDate } from "/src/helpers.js";
+import { create, showDateTime, getAvatar, showDate } from "/src/helpers.js";
 import api from "/src/api.js";
 
 import "/src/components/qp-popup.js";
 
-const stylesheet = () => linkToCSS("/styles/qp-post.css");
+import baseStyle from "/src/styles/base.css.js";
+import postStyle from "/src/styles/components/post.css.js";
+import { navigateTo } from "/src/components/qp-router.js";
 
 customElements.define("qp-post", class extends HTMLElement {
-  static get stylesheet() {
-    return linkToCSS("/styles/qp-post.css");
-  }
-
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
+    this.shadowRoot.adoptedStyleSheets = [baseStyle, postStyle];
 
     this.showLikes = this.showLikes.bind(this);
     this.likePost = this.likePost.bind(this);
@@ -21,9 +20,7 @@ customElements.define("qp-post", class extends HTMLElement {
 
     this.showComments = this.showComments.bind(this);
     this.addComment = this.addComment.bind(this);
-
-    this.expandImage = this.expandImage.bind(this);
-    this.contractImage = this.contractImage.bind(this);
+    this.createComment = this.createComment.bind(this);
 
     this.edit = this.edit.bind(this);
     this.confirmDelete = this.confirmDelete.bind(this);
@@ -39,202 +36,202 @@ customElements.define("qp-post", class extends HTMLElement {
 
     this.comments.sort((a, b) => Number(b.published) - Number(a.published));
 
-    this.shadowRoot.appendChild(this.constructor.stylesheet).addEventListener("load", () => {
-      this.shadowRoot.append(
-        create("div", { id: "container", class: "card" }, [
-          create("div", { id: "frame" }, [
-            create("img", { id: "image", src: this.getAttribute("src") }),
-            create("button", { onClick: this.expandImage, class: "icon-button" }, [
-              create("ion-icon", { name: "expand" })
-            ])
-          ]),
-          create("div", { id: "actions" }, [
+    this.shadowRoot.append(
+      create("div", { id: "container", class: "card post__container" }, [
+        create("div", { class: "post__frame" }, [
+          create("img", { id: "image", class: "post__image", src: this.getAttribute("src") }),
+        ]),
+        create("div", { class: "post__action-bar" }, [
+          create("div", { class: "button-group", spacing: "compact" }, [
             create("button", {
               onClick: this.toggleLike,
-              id: "like",
-              class: `icon-button ${this.likes.includes(id) ? "active" : ""}`,
+              class: "post__action",
+              appearance: "subtle",
+              "aria-label": this.likes.includes(id) ? "unlike" : "like",
             }, [
-              create("ion-icon", { name: this.likes.includes(id) ? "heart" : "heart-outline" })
+              create("ion-icon", { name: "heart", class: "post__action__icon" }),
+              create("ion-icon", { name: "heart-outline", class: "post__action__icon" }),
             ]),
-            create("span", { onClick: this.showLikes }, [String(this.likes.length)]),
-            create("ion-icon", { class: "separator", name: "ellipse" }),
-            create("button", { onClick: this.showComments, class: "icon-button" }, [
-              create("ion-icon", { name: "chatbubble-outline" })
+            create("button", { onClick: this.showLikes, appearance: "subtle-link" }, [String(this.likes.length)]),
+            create("ion-icon", { class: "post__action-separator", name: "ellipse" }),
+            create("button", {
+              onClick: this.showComments,
+              class: "post__action",
+              appearance: "subtle",
+              "aria-label": "comment"
+            }, [
+              create("ion-icon", { name: "chatbubble-outline", class: "post__action__icon" })
             ]),
-            create("span", {}, [String(this.comments.length)]),
-            this.currentUser.posts.includes(this.id) && (
-              create("div", { class: "button-group" }, [
-                create("button", { onClick: this.edit, class: "button edit" }, [
-                  create("span", {}, ["Edit"]),
-                ]),
-                create("button", { onClick: this.confirmDelete, class: "button delete" }, [
-                  create("ion-icon", { name: "trash" })
-                ]),
-              ])
-            )
+            create("button", { onClick: this.showComments, appearance: "subtle-link" }, [String(this.comments.length)]),
           ]),
-          create("span", {
-            onClick: this.showComments,
-            id: "description",
-            class: "h400",
-            title: this.getAttribute("description")
+          this.currentUser.posts.includes(this.id) && (
+            create("div", { class: "button-group" }, [
+              create("button", { onClick: this.confirmDelete }, [
+                create("ion-icon", { name: "trash" })
+              ]),
+              create("button", { onClick: this.edit, appearance: "primary" }, ["Edit"]),
+            ])
+          )
+        ]),
+        create("h2", {
+          class: "post__description h400",
+          title: this.getAttribute("description")
+        }, [
+          this.getAttribute("description")
+        ]),
+        create("footer", { class: "post__footer" }, [
+          create("button", {
+            class: "post__author",
+            href: `#/user/${this.getAttribute("author")}`,
+            appearance: "link",
+            title: "View Profile"
           }, [
-            this.getAttribute("description")
+            create("qp-avatar", { class: "post__avatar", size: "small", user: this.getAttribute("author") }),
+            this.getAttribute("author")
           ]),
-          create("footer", {}, [
-            create("a", { class: "author", href: `#/user/${this.getAttribute("author")}` }, [
-              create("qp-avatar", { size: "small", user: this.getAttribute("author") }),
-              this.getAttribute("author")
-            ]),
-            create("time", { class: "published" }, [showDate(this.getAttribute("published"))]),
-          ])
+          create("time", { class: "post__published" }, [showDate(this.getAttribute("published"))]),
         ])
-      )
-    }, true);
-  }
-
-  async expandImage() {
-    const img = this.shadowRoot.getElementById("image");
-    const rect = img.getBoundingClientRect();
-    const clone = create("dialog", {}, [
-      create("img", { src: img.src }),
-      create("button", { onClick: this.contractImage, class: "icon-button floating" }, [
-        create("ion-icon", { name: "contract" })
       ])
-    ]);
-    clone.style.setProperty("--expandStartLeft", `${Math.round(rect.x)}px`);
-    clone.style.setProperty("--expandStartTop", `${Math.round(rect.y)}px`);
-    clone.style.setProperty("--expandStatWidth", `${Math.round(rect.width)}px`);
-    clone.style.setProperty("--expandStatHeight", `${Math.round(rect.height)}px`);
-    img.insertAdjacentElement("beforebegin", clone);
-    clone.showModal();
-    clone.addEventListener("click", ({ path }) => {
-      if (path[0] === clone) {
-        this.contractImage();
-      }
-    });
-    img.style.visibility = "hidden";
-    img.nextSibling.style.visibility = "hidden";
-    clone.classList.add("expanded", "floating", "card");
-  }
-
-  async contractImage() {
-    const clone = this.shadowRoot.querySelector("dialog");
-    clone.addEventListener("animationend", () => {
-      const img = this.shadowRoot.getElementById("image");
-      img.style.visibility = "visible";
-      img.nextSibling.style.visibility = "visible";
-      clone.remove();
-    });
-    clone.classList.add("contract");
+    );
   }
 
   async showLikes(event) {
-    const users = await withLoader(Promise.all(this.likes.map(id => api.user.getById(id))));
+    const users = await Promise.all(this.likes.map(id => api.user.getById(id)));
 
-    const list = create("div", {}, [
-      create("h3", {}, ["Liked By"]),
-      create("ul", {}, users.map(user =>
-        create("li", {}, [user.username])
-      ))
+    const modal = create("qp-popup", {
+      heading: "Likes",
+      headingElement: "h3",
+      description: "People who have liked this post"
+    }, [
+      users.length > 0
+        ? create("ul", {}, users.map(({ username }) =>
+          create("li", {}, [
+            create("button", {
+              class: "post__author",
+              onClick: () => navigateTo(`/user/${username}`),
+              appearance: "link"
+            }, [
+              create("qp-avatar", { class: "post__avatar", size: "small", user: username }),
+              username
+            ]),
+          ])
+        ))
+        : create("span", { class: "help-text post__no-likes" }, [
+          create("ion-icon", { name: "sad-outline" }),
+          "No one yet",
+        ])
     ]);
-    const popup = create("dialog", { id: "like-popup" }, [list]);
 
-    this.shadowRoot.append(popup);
-    popup.showModal();
-    popup.addEventListener("click", ({ target }) => {
-      if (target === popup) {
-        popup.remove();
-      }
-    });
+    this.shadowRoot.append(modal);
+    modal.showModal();
   }
 
   async likePost(event) {
-    // event.target.blur();
-    console.log(await api.post.like(this.id));
+    const button = event.currentTarget;
+    const oldCount = Number(button.nextSibling.textContent);
+    button.setAttribute("aria-label", "unlike");
+    button.nextSibling.textContent = String(oldCount + 1);
     this.likes = this.likes.concat(this.currentUser.id);
+    console.log(await api.post.like(this.id));
   }
 
   async unlikePost(event) {
-    // event.target.blur();
-    console.log(await api.post.unlike(this.id));
+    const button = event.currentTarget;
+    const oldCount = Number(button.nextSibling.textContent);
+    button.setAttribute("aria-label", "like");
+    button.nextSibling.textContent = String(oldCount - 1);
     this.likes = this.likes.filter(id => id !== this.currentUser.id);
+    console.log(await api.post.unlike(this.id));
   }
 
   async toggleLike(event) {
     const button = event.currentTarget;
-    if (this.likes.includes(this.currentUser.id)) {
-      await this.unlikePost(event);
-    } else {
+    const oldCount = Number(button.nextSibling.textContent);
+    if (button.getAttribute("aria-label") === "like") {
       await this.likePost(event);
+    } else {
+      await this.unlikePost(event);
     }
-
-    button.classList.toggle("active");
-    button.children[0].setAttribute("name", this.likes.includes(this.currentUser.id) ? "heart" : "heart-outline");
   }
 
   async showComments() {
-    const popup = create("dialog", { id: "comment-popup", class: "popup card floating growing" }, [
-      create("div", { onClick: event => event.stopPropagation() }, [
-        create("header", { class: "sticky" }, [
-          create("span", { class: "h600" }, ["Comments"]),
-          create("form", { onSubmit: this.addComment }, [
-            create("label", { class: "h200", for: "new-comment" }, ["New Comment"]),
-            create("input", { id: "new-comment", required: true, placeholder: "What are your thoughts?" })
-          ]),
+    const modal =
+      create("qp-popup", {
+        heading: "Comments",
+        headingElement: "h3",
+      }, [
+        create("div", { class: "comment-list" }, this.comments.map(this.createComment)),
+        create("span", { class: "help-text" }, [
+          create("ion-icon", { name: "sad-outline" }),
+          "No comments yet",
         ]),
-        ...this.comments.map(({ author, published, comment }) =>
-          create("div", { class: "comment" }, [
-            create("qp-avatar", { size: "medium", user: author }),
-            create("div", { class: "comment-body" }, [
-              create("header", {}, [
-                create("a", { class: "author", href: `#/user/${author}` }, [author]),
-                author === this.getAttribute("author") && create("span", { class: "lozenge" }, ["Author"]),
-                create("time", { class: "published" }, [showDate(published)]),
-              ]),
-              create("p", {}, [comment]),
-            ])
+        create("form", { onSubmit: this.addComment, class: "comment__form", slot: "footer" }, [
+          create("input", { id: "new-comment", required: true, placeholder: "Your thoughts..." }),
+          create("div", { class: "button-group" }, [
+            create("button", { appearance: "primary" }, ["Comment"]),
+            create("button", {
+              appearance: "subtle",
+              onClick: event => {
+                event.preventDefault();
+                modal.close();
+              }
+            }, ["Cancel"]),
           ])
-        )
-      ])
-    ]);
+        ])
+      ]);
 
-    this.shadowRoot.append(popup);
-    popup.showModal();
-    popup.addEventListener("click", ({ target }) => {
-      if (target === popup) {
-        popup.remove();
-      }
-    })
+    this.shadowRoot.append(modal);
+    modal.showModal();
   }
 
   async addComment(event) {
     event.preventDefault();
     const input = event.currentTarget.querySelector("#new-comment");
-    const { message } = await api.post.comment(this.id, input.value);
-    if (message === "success") {
+
+    input.setAttribute("disabled", "");
+
+    const { status } = await api.post.comment(this.id, input.value);
+    if (status === 200) {
       const { username: author } = await api.user.getCurrent();
 
-      const firstComment = this.shadowRoot.querySelector(".comment");
-      firstComment.insertAdjacentElement("beforebegin",
-        create("div", { class: "comment grow" }, [
-          create("qp-avatar", { size: "medium", user: author }),
-          create("div", { class: "comment-body" }, [
-            create("header", {}, [
-              create("a", { class: "author", href: `#/user/${author}` }, [author]),
-              author === this.getAttribute("author") && create("span", { class: "lozenge" }, ["Author"]),
-              create("time", { class: "published" }, ["Just Now"]),
-            ]),
-            create("p", {}, [input.value]),
-          ])
-        ])
+      const published = String(Date.now() / 1000);
+
+      const comments = this.shadowRoot.querySelector(".comment-list");
+      comments.prepend(
+        this.createComment({ author, published, comment: input.value })
       );
+
+      this.comments.unshift({ author, published, comment: input.value });
+      const indicator = this.shadowRoot.querySelector("[aria-label=comment]").nextElementSibling;
+      const count = Number(indicator.textContent);
+      indicator.textContent = String(count + 1);
 
       input.value = "";
       input.blur();
-
-      this.shadowRoot.querySelector("#comment-popup").scrollTo({ top: 0, left: 0, behaviour: "smooth" });
+      input.removeAttribute("disabled");
+      input.closest("qp-popup").scrollTo({ top: 0, left: 0, behaviour: "smooth" });
     }
+  }
+
+  createComment({ author, published, comment }) {
+    return (
+      create("div", { class: "comment" }, [
+        create("qp-avatar", { class: "comment__avatar", size: "medium", user: author }),
+        create("div", { class: "comment__body" }, [
+          create("header", { class: "comment__body__meta" }, [
+            create("button", {
+              class: "author",
+              onClick: () => navigateTo(`#/user/${author}`),
+              appearance: "link",
+              title: "View Profile"
+            }, [author]),
+            author === this.getAttribute("author") && create("span", { class: "lozenge" }, ["Author"]),
+            create("time", { class: "published" }, [showDate(published)]),
+          ]),
+          create("p", { class: "comment__content" }, [comment]),
+        ])
+      ])
+    );
   }
 
   async edit() {
@@ -250,18 +247,31 @@ customElements.define("qp-post", class extends HTMLElement {
       modal.close();
     };
 
-    const modal = create("qp-popup", { heading: "Edit post" }, [
-      create("form", { onSubmit: saveChanges }, [
-        create("label", { for: "desc", class: "h200" }, ["Description"]),
-        create("input", {
-          id: "desc",
-          name: "description_text",
-          value: this.getAttribute("description"),
-          required: true,
-        }),
-        create("button", { style: { marginTop: "16px" } }, ["Save"])
-      ])
+    const form = create("form", { onSubmit: saveChanges }, [
+      create("label", { for: "desc", class: "h200", required: true, style: { marginTop: "0px" } }, ["Description"]),
+      create("input", {
+        id: "desc",
+        name: "description_text",
+        value: this.getAttribute("description"),
+        required: true,
+        onFocus: ({ currentTarget }) => {
+          currentTarget.selectionStart = currentTarget.selectionEnd = currentTarget.value.length;
+        }
+      })
     ]);
+
+    const modal = create("qp-popup", {
+      heading: "Edit post",
+      headingElement: "h3",
+      description: "Change the metadata of the post",
+      actions: [
+        {
+          content: "Save",
+          onClick: () => form.requestSubmit()
+        },
+        { content: "Cancel" }
+      ]
+    }, [form]);
     this.shadowRoot.append(modal);
     modal.showModal();
   }
@@ -270,14 +280,19 @@ customElements.define("qp-post", class extends HTMLElement {
     const deletePost = async (event) => {
       await api.post.delete(this.id);
       modal.close();
+      window.location.refresh();
     };
 
-    const modal = create("qp-popup", { heading: "You're about to delete this post", appearance: "danger" }, [
+    const modal = create("qp-popup", {
+      heading: "You're about to delete this post",
+      headingElement: "h3",
+      appearance: "danger",
+      actions: [
+        { onClick: deletePost, content: "Delete" },
+        { content: "Cancel" }
+      ]
+    }, [
       create("p", {}, ["This action is permanent. You will not be able to recover your post after deletion."]),
-      create("div", { class: "button-group" }, [
-        create("button", { onClick: deletePost, class: "button" }, ["Delete"]),
-        create("button", { onClick: () => modal.close(), class: "button" }, ["Cancel"]),
-      ])
     ]);
     this.shadowRoot.append(modal);
     modal.showModal();
