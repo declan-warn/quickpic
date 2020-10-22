@@ -11,8 +11,10 @@ customElements.define("qp-nav", class extends HTMLElement {
     this.shadowRoot.append(
       create("nav", {}, [
         create("div", {}, [
-          create("slot", { name: "logo" }),
           create("slot", { name: "primary" }),
+        ]),
+        create("div", {}, [
+          create("slot", { name: "page-title" }),
         ]),
         create("div", {}, [
           create("slot", { name: "secondary" }),

@@ -32,7 +32,7 @@ customElements.define("qp-feed", class extends HTMLElement {
         create("aside", { class: "side-bar" }, [
           create("button", { class: "action", onClick: this.newPost, hero: true, appearance: "subtle" }, [
             create("ion-icon", { name: "add", size: "small" }),
-            "New Post",
+            "New post",
           ]),
           // create("span", { class: "h300" }, [
           //   "Order",
@@ -61,6 +61,8 @@ customElements.define("qp-feed", class extends HTMLElement {
       ])
     );
 
+    this.closest("qp-app").setTitle("Feed");
+
     // const { following } = await api.user.getCurrent();
     // const users = await Promise.all(following.map(api.user.getById));
     // this.shadowRoot.querySelector(".side-bar").append(
@@ -72,7 +74,7 @@ customElements.define("qp-feed", class extends HTMLElement {
 
   newPost() {
     const popup = create("qp-popup", {
-      heading: "New Post",
+      heading: "New post",
       description: "Got some fresh OC or a spicy meme? Share it!",
       actions: [
         { content: "Create", onClick: () => this.shadowRoot.querySelector("form").requestSubmit() },

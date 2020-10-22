@@ -3,9 +3,36 @@
   grid-template-rows: auto 1fr;
 }
 
+
+
+@keyframes grow {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+h1[slot="page-title"] {
+  color: var(--col-N0);
+  margin: 0px;
+
+}
+
+h1[slot="page-title"].grow {
+  animation: grow 200ms ease-out;
+}
+
 @media (min-width: 768px) {
   #container {
     grid-template-rows: none;
     grid-template-columns: auto 1fr;
+  }
+
+  h1[slot="page-title"] {
+    writing-mode: vertical-lr;
+    transform: rotate(180deg);
   }
 }

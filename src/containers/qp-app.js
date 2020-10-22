@@ -6,6 +6,8 @@ import api from "/src/api.js";
 import "/src/components/qp-dropdown.js";
 import "/src/components/qp-flag.js";
 
+import baseStyle from "/src/styles/base.css.js";
+
 customElements.define("qp-app", class extends HTMLElement {
   static get stylesheet() {
     return linkToCSS("/styles/qp-app.css");
@@ -15,6 +17,9 @@ customElements.define("qp-app", class extends HTMLElement {
     super();
     this.attachShadow({ mode: "open" });
     this.shadowRoot.append(this.constructor.stylesheet);
+    this.shadowRoot.adoptedStyleSheets = [baseStyle];
+
+    this.pageTitle = "";
 
     this.start = Date.now();
     this.notified = new Set();
@@ -22,10 +27,20 @@ customElements.define("qp-app", class extends HTMLElement {
     this.poll = this.poll.bind(this);
   }
 
+  setTitle(title) {
+    const h1 = this.shadowRoot.querySelector("h1");
+
+    this.pageTitle = title;
+    h1.textContent = title;
+    h1.classList.add("grow");
+    h1.addEventListener("animationend", () => { h1.classList.remove("grow") }, true);
+  }
+
   async connectedCallback() {
     this.shadowRoot.append(
       create("div", { id: "container" }, [
         create("qp-nav", {}, [
+          create("h1", { slot: "page-title", class: "h800" }, []),
           create("qp-nav-link", { slot: "primary", "aria-label": "feed" }, [
             create("a", { href: "#/feed" }, [
               create("ion-icon", { name: "grid" })
@@ -43,7 +58,7 @@ customElements.define("qp-app", class extends HTMLElement {
             create("a", { href: "#/user" }, [
               create("qp-avatar", { size: "medium", outline: false })
             ])
-          ])
+          ]),
         ]),
         create("slot")
       ])
