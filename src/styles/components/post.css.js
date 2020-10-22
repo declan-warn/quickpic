@@ -26,12 +26,17 @@ export default css`
 .post__frame {
   position: relative;
   width: 100%;
-  background: var(--col-N20);
+  background: var(--col-N10);
   border-radius: 1.5px;
+  border: 1px solid var(--col-B50);
   overflow: hidden;
   margin-bottom: ${gap};
 }
 
+/*
+Response square using technique from:
+<https://spin.atomicobject.com/2015/07/14/css-responsive-square/>
+*/
 .post__frame::after {
   content: "";
   display: block;
@@ -39,8 +44,9 @@ export default css`
 }
 
 .post__image {
-  max-width: 100%;
-  max-height: 100%;
+  object-fit: contain;
+  width: 100%;
+  height: 100%;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -88,7 +94,7 @@ export default css`
 
 .post__action-separator {
   font-size: 4px;
-  margin: 0 8px;
+  margin: 0 4px 0px 8px;
   color: var(--col-N200);
 }
 

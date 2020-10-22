@@ -31,15 +31,21 @@ customElements.define("qp-post", class extends HTMLElement {
   }
 
   async connectedCallback() {
-    this.currentUser = await api.user.getCurrent();
+    // this.currentUser = await api.user.getCurrent();
     const { id } = this.currentUser;
 
     this.comments.sort((a, b) => Number(b.published) - Number(a.published));
 
     this.shadowRoot.append(
-      create("div", { class: "card post__container" }, [
+      create("div", { class: "frame post__container" }, [
         create("div", { class: "post__frame" }, [
           create("img", { id: "image", class: "post__image", src: this.getAttribute("src") }),
+        ]),
+        create("h2", {
+          class: "post__description h400",
+          title: this.getAttribute("description")
+        }, [
+          this.getAttribute("description")
         ]),
         create("div", { class: "post__action-bar" }, [
           create("div", { class: "button-group", spacing: "compact" }, [
@@ -72,12 +78,6 @@ customElements.define("qp-post", class extends HTMLElement {
               create("button", { onClick: this.edit, appearance: "primary" }, ["Edit"]),
             ])
           )
-        ]),
-        create("h2", {
-          class: "post__description h400",
-          title: this.getAttribute("description")
-        }, [
-          this.getAttribute("description")
         ]),
         create("footer", { class: "post__footer" }, [
           create("button", {

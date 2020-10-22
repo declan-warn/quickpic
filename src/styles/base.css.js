@@ -33,6 +33,60 @@ const baseStyle = css`
   text-transform: uppercase;
 }
 
+.side-bar {
+  background: var(--col-N20);
+  width: 240px;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 1;
+}
+
+.side-bar span {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.side-bar button[hero] {
+  height: 64px;
+  display: inline-flex;
+  align-items: center;
+  font-weight: 500;
+}
+
+aside button[hero] ion-icon {
+  background: var(--col-T300);
+  color: var(--col-N0);
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;
+  border-radius: 3px;
+  border: 8px solid var(--col-T300);
+}
+
+aside button:not(:active):hover {
+  background-color: var(--col-N30);
+}
+
+.frame {
+  box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px, rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
+  border-radius: 1.5px;
+}
+
+.frame:hover {
+  cursor: pointer;
+  background-color: var(--col-N20);
+}
+
+label:first-child {
+  margin-top: 0px;
+}
+
 `;
 
 export default mergeCSS(

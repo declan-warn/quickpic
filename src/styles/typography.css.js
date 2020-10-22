@@ -20,6 +20,15 @@ li + li {
   margin-top: 4px;
 }
 
+.h800 {
+  font-size: 29px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--col-N800);
+  line-height: 32px;
+  margin-top: 40px;
+}
+
 .h700 {
   font-size: 24px;
   font-weight: 500;
