@@ -3,7 +3,7 @@ import api from "/src/api.js";
 import { navigateTo } from "/src/components/qp-router.js";
 
 import baseStyle from "/src/styles/base.css.js";
-import authStyle from "/src/styles/auth.css.js";
+import authStyle from "/src/styles/pages/auth.css.js";
 
 customElements.define("qp-signup", class extends HTMLElement {
   constructor() {

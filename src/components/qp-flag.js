@@ -1,7 +1,7 @@
 import { create } from "/src/helpers.js";
 
 import baseStyle from "/src/styles/base.css.js";
-import flagStyle from "/src/styles/flag.css.js";
+import flagStyle from "/src/styles/components/flag.css.js";
 
 customElements.define("qp-flag", class extends HTMLElement {
   constructor() {

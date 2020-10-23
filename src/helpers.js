@@ -87,9 +87,6 @@ export const mergeCSS = (...sheets) => {
   return merged;
 };
 
-export const linkToCSS = href =>
-  create("link", { href, rel: "stylesheet" });
-
 export const withLoader = promise => {
   const spinner = create("dialog", { textContent: "loading..." });
   document.body.append(spinner);

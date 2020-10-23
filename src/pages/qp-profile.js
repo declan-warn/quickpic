@@ -1,4 +1,4 @@
-import { create, getAvatar, linkToCSS, showDateTime, moveCursorToEnd } from "/src/helpers.js";
+import { create, getAvatar, showDateTime, moveCursorToEnd } from "/src/helpers.js";
 import api from "/src/api.js";
 import { navigateTo } from "/src/components/qp-router.js";
 

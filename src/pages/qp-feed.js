@@ -10,10 +10,6 @@ import baseStyle from "/src/styles/base.css.js";
 import feedStyle from "/src/styles/pages/feed.css.js";
 
 customElements.define("qp-feed", class extends HTMLElement {
-  static get stylesheet() {
-    return linkToCSS("/styles/qp-feed.css");
-  }
-
   constructor() {
     super();
 
