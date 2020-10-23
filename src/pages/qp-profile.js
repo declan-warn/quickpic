@@ -5,6 +5,7 @@ import { navigateTo } from "/src/components/qp-router.js";
 import "/src/components/qp-avatar.js";
 import "/src/components/qp-post.js";
 import "/src/components/qp-popup.js";
+import "/src/components/qp-spinner.js";
 
 import baseStyle from "/src/styles/base.css.js";
 import profileStyle from "/src/styles/pages/profile.css.js";
@@ -29,6 +30,15 @@ customElements.define("qp-profile", class extends HTMLElement {
   }
 
   async connectedCallback() {
+    this.shadowRoot.append(
+      create("div", { class: "profile" }, [
+        create("aside", { class: "side-bar" }),
+        create("div", { class: "profile__loading" }, [
+          create("qp-spinner")
+        ])
+      ])
+    )
+
     if (!this.getAttribute("username")) {
       const { username } = await api.user.getCurrent();
       return navigateTo(`user/${username}`);
@@ -50,7 +60,11 @@ customElements.define("qp-profile", class extends HTMLElement {
     this.posts.sort((a, b) => Number(b.meta.published) - Number(a.meta.published));
     this.following.sort((a, b) => a.username > b.username ? 1 : -1);
 
-    this.closest("qp-app").setTitle("Profile");
+    this.closest("qp-app").setTitle(
+      this.user.id === this.currentUser.id
+        ? "Your Profile"
+        : `${this.user.username}'s Profile`
+    );
 
     this.render();
     this.renderPosts();
@@ -58,23 +72,15 @@ customElements.define("qp-profile", class extends HTMLElement {
   }
 
   render() {
+    this.shadowRoot.firstChild.remove();
     this.shadowRoot.append(
       create("div", { class: "profile" }, [
         create("aside", { class: "side-bar" }, [
           this.currentUser.id === this.user.id
-            ? create("button", { onClick: this.editProfile, class: "action", hero: true, appearance: "subtle" }, [
-              create("ion-icon", { name: "build-outline" }),
-              "Update",
-            ])
+            ? this.renderEditButton()
             : this.currentUser.following.includes(this.user.id)
-              ? create("button", { onClick: this.unfollow, class: "action", hero: true, appearance: "subtle" }, [
-                create("ion-icon", { name: "person-remove-outline" }),
-                "Unfollow",
-              ])
-              : create("button", { onClick: this.follow, class: "action", hero: true, appearance: "subtle" }, [
-                create("ion-icon", { name: "person-add-outline" }),
-                "Follow",
-              ]),
+              ? this.renderUnfollowButton()
+              : this.renderFollowButton(),
           create("span", { id: "following", class: "h300" }, [
             "Following",
             create("ion-icon", { name: "people-outline" })
@@ -105,6 +111,33 @@ customElements.define("qp-profile", class extends HTMLElement {
     );
   }
 
+  renderEditButton() {
+    return (
+      create("button", { onClick: this.editProfile, class: "action", hero: true, appearance: "subtle" }, [
+        create("ion-icon", { name: "build-outline" }),
+        "Update",
+      ])
+    );
+  }
+
+  renderFollowButton() {
+    return (
+      create("button", { onClick: this.follow, class: "action", hero: true, appearance: "subtle" }, [
+        create("ion-icon", { name: "person-add-outline" }),
+        "Follow",
+      ])
+    );
+  }
+
+  renderUnfollowButton() {
+    return (
+      create("button", { onClick: this.unfollow, class: "action", hero: true, appearance: "subtle" }, [
+        create("ion-icon", { name: "person-remove-outline" }),
+        "Unfollow",
+      ])
+    );
+  }
+
   renderPosts() {
     this.shadowRoot.querySelector(".profile__posts").append(...this.posts.map(post =>
       create("qp-post", {
@@ -123,7 +156,6 @@ customElements.define("qp-profile", class extends HTMLElement {
   }
 
   renderFollowing() {
-    console.log(this.following);
     this.shadowRoot.querySelector(".side-bar").append(
       ...this.following.map(({ username }) =>
         create("button", { onClick: () => navigateTo(`/user/${username}`), appearance: "subtle" }, [username])
@@ -132,10 +164,12 @@ customElements.define("qp-profile", class extends HTMLElement {
   }
 
   async follow() {
+    this.shadowRoot.querySelector(".action[hero]").replaceWith(this.renderUnfollowButton());
     await api.user.follow(this.user.username);
   }
 
   async unfollow() {
+    this.shadowRoot.querySelector(".action[hero]").replaceWith(this.renderFollowButton());
     await api.user.unfollow(this.user.username);
   }
 
@@ -150,8 +184,13 @@ customElements.define("qp-profile", class extends HTMLElement {
         delete payload.password;
       }
 
-      await api.user.update(payload);
-      modal.close();
+      if (payload.name !== this.user.name || payload.email !== this.user.email || payload.password) {
+        this.user.name = payload.name;
+        this.user.email = payload.email;
+        this.shadowRoot.querySelector
+        modal.close();
+        await api.user.update(payload);
+      }
     };
 
     const form =

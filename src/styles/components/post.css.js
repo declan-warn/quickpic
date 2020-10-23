@@ -41,6 +41,7 @@ export default css`
   flex-direction: column;
   animation: post--grow 200ms ease-in-out;
   padding: ${gap};
+  height: 100%;
 }
 
 .post__frame {
@@ -122,7 +123,8 @@ Response square using technique from:
   // white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin: ${gap};
+  margin: ${gap} ${gap} auto;
+  padding-bottom: ${gap};
 }
 
 .post__footer {

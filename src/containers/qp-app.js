@@ -3,7 +3,6 @@ import { create, linkToCSS } from "/src/helpers.js";
 import { navigateTo } from "/src/components/qp-router.js";
 import api from "/src/api.js";
 
-import "/src/components/qp-dropdown.js";
 import "/src/components/qp-flag.js";
 
 import baseStyle from "/src/styles/base.css.js";

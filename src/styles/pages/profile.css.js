@@ -5,6 +5,18 @@ import { mobileBreakpoint } from "/src/styles/base.css.js";
 
 export default css`
 
+@keyframes grow {
+  from {
+    transform: scale(0, 0);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1, 1);
+    opacity: 1;
+  }
+}
+
 .profile {
   display: flex;
   flex-direction: row;
@@ -26,6 +38,7 @@ export default css`
 .profile-card {
   width: fit-content;
   margin: 42px auto 32px;
+  animation: grow 200ms ease-out;
 }
 
 .profile-card__header {
@@ -97,6 +110,16 @@ ${postLayout(".profile__posts")}
   .profile__main {
     padding: 32px 64px;
   }
+}
+
+.profile__loading {
+  display: flex;
+  position: relative;
+  height: 100%;
+  top: 60px;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
 }
 
 `;

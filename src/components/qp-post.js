@@ -8,6 +8,10 @@ import postStyle from "/src/styles/components/post.css.js";
 import { navigateTo } from "/src/components/qp-router.js";
 
 customElements.define("qp-post", class extends HTMLElement {
+  static get observedAttributes() {
+    return ["description"];
+  }
+
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
@@ -95,6 +99,15 @@ customElements.define("qp-post", class extends HTMLElement {
         ])
       ])
     );
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === "description") {
+      const descElem = this.shadowRoot.querySelector(".post__description");
+      if (descElem) {
+        descElem.textContent = newValue;
+      }
+    }
   }
 
   async showLikes(event) {
@@ -243,14 +256,15 @@ customElements.define("qp-post", class extends HTMLElement {
       const payload = Object.fromEntries(data.entries());
 
       if (payload.description_text !== this.getAttribute("description")) {
+        this.setAttribute("description", payload.description_text);
+        modal.close();
         await api.post.edit(this.id, payload);
       }
 
-      modal.close();
     };
 
     const form = create("form", { onSubmit: saveChanges }, [
-      create("label", { for: "desc", class: "h200", required: true, style: { marginTop: "0px" } }, ["Description"]),
+      create("label", { for: "desc", class: "h200", required: true }, ["Description"]),
       create("input", {
         id: "desc",
         name: "description_text",
@@ -282,7 +296,7 @@ customElements.define("qp-post", class extends HTMLElement {
     const deletePost = async (event) => {
       await api.post.delete(this.id);
       modal.close();
-      window.location.refresh();
+      this.remove();
     };
 
     const modal = create("qp-popup", {
@@ -301,7 +315,7 @@ customElements.define("qp-post", class extends HTMLElement {
   }
 
   expand(event) {
-    // Not ideal but better than binding 6 events just to stop propagation
+    // Not ideal but better than binding a bunch of events just to stop propagation
     const allowedTargets = [
       ".post__container",
       ".post__image",
