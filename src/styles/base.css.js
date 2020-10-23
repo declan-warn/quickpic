@@ -78,7 +78,7 @@ aside button:not(:active):hover {
   border-radius: 1.5px;
 }
 
-.frame:hover {
+.frame:not([no-hover]):hover {
   cursor: pointer;
   background-color: var(--col-N20);
 }

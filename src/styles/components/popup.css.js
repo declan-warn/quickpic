@@ -47,15 +47,15 @@ export default css`
 }
 
 .popup {
-  --top: 60px;
+  --gap: 60px;
   border: 0px;
   position: fixed;
-  top: var(--top);
+  top: var(--gap);
   left: 50%;
   transform: translateX(-50%);
   margin: 0;
   padding: 0;
-  max-height: calc(100vh - (var(--top) * 2));
+  max-height: calc(100vh - (var(--gap) * 2));
   max-width: 80ch;
   width: 100%;
   display: flex;
@@ -123,6 +123,41 @@ export default css`
 .popup[appearance=danger] .popup__icon {
   display: inline-block;
   color: var(--col-R400);
+}
+
+.popup[no-chrome] {
+  --max-width: calc(100vw - var(--gap) * 2);
+  --max-height: calc(100vh - var(--gap) * 2);
+  --border-width: 8px;
+  --test: calc(100vw - var(--gap) * 2 - var(--border-width) * 2);
+  --abra: calc(100vh - var(--gap) * 2 - var(--border-width) * 2);
+
+  max-width: var(--max-width);
+  max-height: var(--max-height);
+  width: max-content;
+  height: max-content;
+  padding: 0px;
+  border: var(--border-width) solid var(--col-N0);
+}
+
+.popup[no-chrome] .popup__body {
+  --max-width--body: calc(var(--max-width) - 2 * var(--border-width));
+  --max-height--body: calc(var(--max-height) - 2 * var(--border-width));
+
+  width: max-content;
+  height: max-content;
+  overflow: hidden;
+  padding: 0px;
+  max-width: var(--max-width);
+  max-height: var(--max-height);
+}
+
+.popup[no-chrome] .popup__body ::slotted(img) {
+  display: flex;
+  max-width: var(--max-width--body);
+  max-height: var(--max-height--body);
+  border-radius: 1.5px;
+  border: 1px solid var(--col-B50);
 }
 
 `;

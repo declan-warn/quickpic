@@ -48,7 +48,8 @@ customElements.define("qp-feed", class extends HTMLElement {
             create("qp-post", {
               class: "post",
               "data-post-id": post.id,
-              src: `data:image/png;base64,${post.thumbnail}`,
+              thumbnail: `data:image/png;base64,${post.thumbnail}`,
+              original: `data:image/png;base64,${post.src}`,
               description: post.meta.description_text,
               author: post.meta.author,
               published: post.meta.published,

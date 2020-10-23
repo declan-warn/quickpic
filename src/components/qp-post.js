@@ -24,6 +24,8 @@ customElements.define("qp-post", class extends HTMLElement {
 
     this.edit = this.edit.bind(this);
     this.confirmDelete = this.confirmDelete.bind(this);
+
+    this.expand = this.expand.bind(this);
   }
 
   get id() {
@@ -37,9 +39,9 @@ customElements.define("qp-post", class extends HTMLElement {
     this.comments.sort((a, b) => Number(b.published) - Number(a.published));
 
     this.shadowRoot.append(
-      create("div", { class: "frame post__container" }, [
+      create("div", { onClick: this.expand, class: "frame post__container" }, [
         create("div", { class: "post__frame" }, [
-          create("img", { id: "image", class: "post__image", src: this.getAttribute("src") }),
+          create("img", { id: "image", class: "post__image", src: this.getAttribute("thumbnail") }),
         ]),
         create("h2", {
           class: "post__description h400",
@@ -294,6 +296,28 @@ customElements.define("qp-post", class extends HTMLElement {
     }, [
       create("p", {}, ["This action is permanent. You will not be able to recover your post after deletion."]),
     ]);
+    this.shadowRoot.append(modal);
+    modal.showModal();
+  }
+
+  expand(event) {
+    // Not ideal but better than binding 6 events just to stop propagation
+    const allowedTargets = [
+      ".post__container",
+      ".post__image",
+      ".post__frame",
+      ".post__action-bar",
+      ".post__description",
+      ".post__footer"
+    ];
+    if (!event.path[0].matches(allowedTargets.join(", "))) return;
+
+    const modal = create("qp-popup", {
+      "no-chrome": true
+    }, [
+      create("img", { src: this.getAttribute("original"), class: "post__image--expanded" })
+    ]);
+
     this.shadowRoot.append(modal);
     modal.showModal();
   }
