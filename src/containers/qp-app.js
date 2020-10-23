@@ -1,4 +1,4 @@
-import { create, linkToCSS } from "/src/helpers.js";
+import { create } from "/src/helpers.js";
 
 import { navigateTo } from "/src/components/qp-router.js";
 import api from "/src/api.js";
@@ -6,17 +6,13 @@ import api from "/src/api.js";
 import "/src/components/qp-flag.js";
 
 import baseStyle from "/src/styles/base.css.js";
+import appStyle from "/src/styles/containers/app.css.js";
 
 customElements.define("qp-app", class extends HTMLElement {
-  static get stylesheet() {
-    return linkToCSS("/styles/qp-app.css");
-  }
-
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
-    this.shadowRoot.append(this.constructor.stylesheet);
-    this.shadowRoot.adoptedStyleSheets = [baseStyle];
+    this.shadowRoot.adoptedStyleSheets = [baseStyle, appStyle];
 
     this.pageTitle = "";
 
@@ -27,19 +23,19 @@ customElements.define("qp-app", class extends HTMLElement {
   }
 
   setTitle(title) {
-    const h1 = this.shadowRoot.querySelector("h1");
+    const h1 = this.shadowRoot.querySelector(".app__page-title");
 
     this.pageTitle = title;
     h1.textContent = title;
-    h1.classList.add("grow");
-    h1.addEventListener("animationend", () => { h1.classList.remove("grow") }, true);
+    h1.classList.add("fade");
+    h1.addEventListener("animationend", () => { h1.classList.remove("fade") }, true);
   }
 
   async connectedCallback() {
     this.shadowRoot.append(
-      create("div", { id: "container" }, [
+      create("div", { class: "app__container" }, [
         create("qp-nav", {}, [
-          create("h1", { slot: "page-title", class: "h800" }, []),
+          create("h1", { slot: "page-title", class: "h800 app__page-title" }, []),
           create("qp-nav-link", { slot: "primary", "aria-label": "feed" }, [
             create("a", { href: "#/feed" }, [
               create("ion-icon", { name: "grid" })
