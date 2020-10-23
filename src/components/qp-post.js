@@ -116,7 +116,10 @@ customElements.define("qp-post", class extends HTMLElement {
     const modal = create("qp-popup", {
       heading: "Likes",
       headingElement: "h3",
-      description: "People who have liked this post"
+      description: "People who have liked this post",
+      actions: [
+        { content: "Close" }
+      ]
     }, [
       users.length > 0
         ? create("ul", {}, users.map(({ username }) =>
@@ -190,7 +193,7 @@ customElements.define("qp-post", class extends HTMLElement {
                 event.preventDefault();
                 modal.close();
               }
-            }, ["Cancel"]),
+            }, ["Close"]),
           ])
         ])
       ]);
@@ -235,13 +238,13 @@ customElements.define("qp-post", class extends HTMLElement {
         create("div", { class: "comment__body" }, [
           create("header", { class: "comment__body__meta" }, [
             create("button", {
-              class: "author",
-              onClick: () => navigateTo(`#/user/${author}`),
+              class: "comment__author",
+              onClick: () => navigateTo(`/user/${author}`),
               appearance: "link",
               title: "View Profile"
             }, [author]),
             author === this.getAttribute("author") && create("span", { class: "lozenge" }, ["Author"]),
-            create("time", { class: "published" }, [showDate(published)]),
+            create("time", { class: "comment__published" }, [showDate(published)]),
           ]),
           create("p", { class: "comment__content" }, [comment]),
         ])

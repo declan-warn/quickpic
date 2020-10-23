@@ -169,6 +169,9 @@ Response square using technique from:
 .comment {
   display: flex;
   padding: 0;
+}
+
+.comment + .comment {
   margin-top: 16px;
 }
 
@@ -188,6 +191,10 @@ Response square using technique from:
 
 .comment__avatar {
   margin-right: 8px;
+}
+
+.comment__author {
+  padding: 0px;
 }
 
 .comment__content {

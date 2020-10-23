@@ -4,6 +4,7 @@ import api from "/src/api.js";
 
 import "/src/components/qp-post.js";
 import "/src/components/qp-popup.js";
+import "/src/components/qp-spinner.js";
 
 import baseStyle from "/src/styles/base.css.js";
 import feedStyle from "/src/styles/pages/feed.css.js";
@@ -25,9 +26,33 @@ customElements.define("qp-feed", class extends HTMLElement {
   }
 
   async connectedCallback() {
-    const { posts } = await api.user.feed();
-    const currentUser = await api.user.getCurrent();
-    this.shadowRoot.append(
+    const loading = this.shadowRoot.appendChild(
+      create("div", { class: "feed" }, [
+        create("aside", { class: "side-bar" }),
+        create("section", { class: "feed__loading" }, [
+          create("qp-spinner")
+        ]),
+      ])
+    );
+
+    // This whack looking promise gives us full parallel fetching while still letting us
+    // await a single value
+    const [{ posts: feedPosts }, [currentUser, myPosts]] =
+      await Promise.all([
+        api.user.feed(),
+        api.user.getCurrent()
+          .then(currentUser =>
+            Promise.all([
+              currentUser,
+              Promise.all(currentUser.posts.map(api.post.get))
+            ])
+          )
+      ]);
+
+    const posts = feedPosts.concat(myPosts);
+    posts.sort((a, b) => Number(b.meta.published) - Number(a.meta.published));
+
+    loading.replaceWith(
       create("div", { class: "feed" }, [
         create("aside", { class: "side-bar" }, [
           create("button", { class: "action", onClick: this.newPost, hero: true, appearance: "subtle" }, [
@@ -112,6 +137,8 @@ customElements.define("qp-feed", class extends HTMLElement {
       const response = await api.post.new(payload);
       if (response.status !== 200) {
         alert(response.message);
+      } else {
+        window.location.reload();
       }
       popup.close();
     };

@@ -10,11 +10,11 @@ import "/src/components/qp-spinner.js";
 import baseStyle from "/src/styles/base.css.js";
 import profileStyle from "/src/styles/pages/profile.css.js";
 
-const createInfo = (iconName, field, value) =>
+const createInfo = (iconName, field, value, id = "") =>
   create("div", { class: "profile-card__info card" }, [
     create("ion-icon", { name: iconName, class: "profile-card__info__icon" }),
     create("span", { class: "profile-card__info__field" }, [field]),
-    create("span", { class: "profile-card__info__value" }, [value]),
+    create("span", { class: "profile-card__info__value", id }, [value]),
   ]);
 
 customElements.define("qp-profile", class extends HTMLElement {
@@ -94,9 +94,9 @@ customElements.define("qp-profile", class extends HTMLElement {
             create("div", { class: "profile-card__body" }, [
               createInfo("finger-print", "Username", this.getAttribute("username")),
               this.user.name &&
-              createInfo("person-circle", "Name", this.user.name),
+              createInfo("person-circle", "Name", this.user.name, "profile--card__name"),
               this.user.email &&
-              createInfo("at-circle", "Email", this.user.email),
+              createInfo("at-circle", "Email", this.user.email, "profile--card__email"),
               createInfo("people-circle", "Followers", String(this.user.followed_num)),
               createInfo("heart-circle", "Likes",
                 String(this.posts.reduce((count, { meta: { likes } }) => count + likes.length, 0))
@@ -184,13 +184,17 @@ customElements.define("qp-profile", class extends HTMLElement {
         delete payload.password;
       }
 
-      if (payload.name !== this.user.name || payload.email !== this.user.email || payload.password) {
-        this.user.name = payload.name;
-        this.user.email = payload.email;
-        this.shadowRoot.querySelector
-        modal.close();
+      if (payload.name !== this.currentUser.name || payload.email !== this.currentUser.email || payload.password) {
+        this.currentUser.name = payload.name;
+        this.currentUser.email = payload.email;
+        const nameElem = this.shadowRoot.getElementById("profile--card__name");
+        const emailElem = this.shadowRoot.getElementById("profile--card__email");
+        if (nameElem) nameElem.textContent = payload.name;
+        if (emailElem) emailElem.textContent = payload.email;
         await api.user.update(payload);
       }
+
+      modal.close();
     };
 
     const form =
