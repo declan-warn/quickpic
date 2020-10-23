@@ -105,7 +105,16 @@ customElements.define("qp-feed", class extends HTMLElement {
     }, [
       create("form", { onSubmit: handleSubmit }, [
         create("label", { for: "description", class: "h200", required: true }, ["Description"]),
-        create("input", { id: "description", name: "description_text", required: true }),
+        create("input", {
+          id: "description",
+          name: "description_text",
+          required: true,
+          maxlength: "100",
+          onInput: ({ currentTarget }) => {
+            currentTarget.nextElementSibling.textContent = `${currentTarget.value.length} / 100`;
+          }
+        }),
+        create("span", { id: "description-char-count", class: "help-text" }, ["0 / 100"]),
         create("label", { for: "image", class: "h200", required: true }, ["Image"]),
         create("input", {
           id: "image",
