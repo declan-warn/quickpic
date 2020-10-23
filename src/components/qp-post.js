@@ -45,7 +45,12 @@ customElements.define("qp-post", class extends HTMLElement {
     this.shadowRoot.append(
       create("div", { onClick: this.expand, class: "frame post__container" }, [
         create("div", { class: "post__frame" }, [
-          create("img", { id: "image", class: "post__image", src: this.getAttribute("thumbnail") }),
+          create("img", {
+            id: "image",
+            class: "post__image",
+            src: this.getAttribute("thumbnail"),
+            alt: `Thumbnail of ${this.getAttribute("author")}'s image`
+          }),
         ]),
         create("h2", {
           class: "post__description h400",
@@ -273,10 +278,17 @@ customElements.define("qp-post", class extends HTMLElement {
         name: "description_text",
         value: this.getAttribute("description"),
         required: true,
+        maxlength: "100",
         onFocus: ({ currentTarget }) => {
           currentTarget.selectionStart = currentTarget.selectionEnd = currentTarget.value.length;
+        },
+        onInput: ({ currentTarget }) => {
+          currentTarget.nextElementSibling.textContent = `${currentTarget.value.length} / 100`;
         }
-      })
+      }),
+      create("span", { id: "description-char-count", class: "help-text" }, [
+        `${this.getAttribute("description").length} / 100`
+      ]),
     ]);
 
     const modal = create("qp-popup", {
@@ -332,7 +344,11 @@ customElements.define("qp-post", class extends HTMLElement {
     const modal = create("qp-popup", {
       "no-chrome": true
     }, [
-      create("img", { src: this.getAttribute("original"), class: "post__image--expanded" })
+      create("img", {
+        src: this.getAttribute("original"),
+        class: "post__image--expanded",
+        alt: `${this.getAttribute("author")}'s image`
+      })
     ]);
 
     this.shadowRoot.append(modal);

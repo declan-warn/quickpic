@@ -25,7 +25,7 @@ customElements.define("qp-avatar", class extends HTMLElement {
 
     this.shadowRoot.append(
       create("div", { id: "container", class: this.getAttribute("size") || "small" }, [
-        create("img", { src: getAvatar(this.getAttribute("user")) })
+        create("img", { src: getAvatar(this.getAttribute("user")), alt: `${this.getAttribute("user")}'s avatar` })
       ])
     );
   }
