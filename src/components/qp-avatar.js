@@ -1,7 +1,7 @@
 import { create, linkToCSS, getAvatar } from "/src/helpers.js";
 import api from "/src/api.js";
 
-import avatarStyle from "/src/styles/avatar.js";
+import avatarStyle from "/src/styles/avatar.css.js";
 
 let cachedUsername;
 

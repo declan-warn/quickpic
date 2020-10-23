@@ -1,6 +1,6 @@
 import { create, linkToCSS } from "/src/helpers.js";
 
-import navStyle from "/src/styles/nav.js";
+import navStyle from "/src/styles/nav.css.js";
 
 customElements.define("qp-nav", class extends HTMLElement {
   constructor() {
