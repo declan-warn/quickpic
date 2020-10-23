@@ -2,16 +2,6 @@ import { css } from "/src/helpers.js";
 
 export default css`
 
-:root {
-  color: var(--col-N800);
-  line-height: 24px;
-  font-size: 14px;
-}
-
-* {
-  font-family: "Segoe UI";
-}
-
 li {
   line-height: 24px;
 }
