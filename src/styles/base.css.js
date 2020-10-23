@@ -12,6 +12,10 @@ const baseStyle = css`
   box-sizing: border-box;
 }
 
+[hidden] {
+  display: none!important;
+}
+
 .card {
   background: var(--col-N0);
   box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px, rgba(9, 30, 66, 0.31) 0px 0px 1px 0px;

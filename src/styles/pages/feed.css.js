@@ -1,16 +1,8 @@
 import { css } from "/src/helpers.js";
 
+import { postLayout } from "/src/styles/components/post.css.js";
+
 export default css`
-
-@keyframes pulsate {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
 
 .feed {
   display: flex;
@@ -29,23 +21,7 @@ export default css`
   align-items: center;
 }
 
-.feed__posts {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 250px));
-  width: 100%;
-  gap: 48px;
-  justify-content: space-evenly;
-  align-content: start;
-}
-
-.feed__posts:empty::before,
-.feed__posts:empty::after {
-  content: "";
-  height: 364px;
-  background: var(--col-N20);
-  border-radius: 1.5px;
-  animation: pulsate 1s ease-in-out infinite alternate;
-}
+${postLayout(".feed__posts")}
 
 .side-bar {
   top: 64px;

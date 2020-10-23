@@ -2,6 +2,26 @@ import { css } from "/src/helpers.js";
 
 const gap = "8px";
 
+import { mobileBreakpoint } from "/src/styles/base.css.js";
+
+export const postLayout = selector =>
+  /* css */`
+  ${selector} {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 250px));
+    width: 100%;
+    gap: 24px;
+    justify-content: space-evenly;
+    align-content: start;
+  }
+
+  @media (min-width: ${mobileBreakpoint}) {
+    ${selector} {
+      gap: 48px;
+    }
+  }
+  `;
+
 export default css`
 
 @keyframes post--grow {
@@ -99,7 +119,7 @@ Response square using technique from:
 }
 
 .post__description {
-  white-space: nowrap;
+  // white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   margin: ${gap};

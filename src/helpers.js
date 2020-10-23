@@ -137,3 +137,7 @@ export const showDate = published => {
   const date = new Date(timestamp);
   return date.toLocaleDateString("en-AU");
 };
+
+export const moveCursorToEnd = ({ currentTarget }) => {
+  currentTarget.selectionStart = currentTarget.selectionEnd = currentTarget.value.length;
+};

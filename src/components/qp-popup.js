@@ -66,6 +66,14 @@ customElements.define("qp-popup", class extends HTMLElement {
         this.close();
       }
     });
+
+    const handleEscape = ({ code }) => {
+      if (code === "Escape") {
+        this.close();
+        window.removeEventListener("keydown", handleEscape);
+      }
+    }
+    window.addEventListener("keydown", handleEscape);
   }
 
   scrollTo(...args) {

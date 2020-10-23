@@ -1,25 +1,27 @@
-import { create, getAvatar, linkToCSS } from "/src/helpers.js";
+import { create, getAvatar, linkToCSS, showDateTime, moveCursorToEnd } from "/src/helpers.js";
 import api from "/src/api.js";
 import { navigateTo } from "/src/components/qp-router.js";
 
 import "/src/components/qp-avatar.js";
 import "/src/components/qp-post.js";
+import "/src/components/qp-popup.js";
 
-const showDateTime = published => {
-  const timestamp = Number(published) * 1000;
-  const date = new Date(timestamp);
-  return date.toLocaleString();
-};
+import baseStyle from "/src/styles/base.css.js";
+import profileStyle from "/src/styles/pages/profile.css.js";
+
+const createInfo = (iconName, field, value) =>
+  create("div", { class: "profile-card__info card" }, [
+    create("ion-icon", { name: iconName, class: "profile-card__info__icon" }),
+    create("span", { class: "profile-card__info__field" }, [field]),
+    create("span", { class: "profile-card__info__value" }, [value]),
+  ]);
 
 customElements.define("qp-profile", class extends HTMLElement {
-  stylesheet = linkToCSS("/styles/qp-profile.css");
-  stylesheetLoaded =
-    new Promise((resolve) => this.stylesheet.addEventListener("load", resolve, true));
-
   constructor() {
     super();
 
     this.attachShadow({ mode: "open" });
+    this.shadowRoot.adoptedStyleSheets = [baseStyle, profileStyle];
 
     this.follow = this.follow.bind(this);
     this.unfollow = this.unfollow.bind(this);
@@ -44,36 +46,32 @@ customElements.define("qp-profile", class extends HTMLElement {
         Promise.all(this.user.following.map(api.user.getById)),
       ]);
 
-    this.following.sort();
 
-    this.shadowRoot.appendChild(this.stylesheet).addEventListener("load", () => {
-      this.render();
-      this.renderPosts();
-      this.renderFollowing();
-    }, true);
-  }
+    this.posts.sort((a, b) => Number(b.meta.published) - Number(a.meta.published));
+    this.following.sort((a, b) => a.username > b.username ? 1 : -1);
 
-  awaitLoaded() {
-    return this.shadowRoot.readyState === "complete"
-      ? Promise.resolve()
-      : new Promise((resolve) => this.stylesheet.addEventListener("load", resolve, true));
+    this.closest("qp-app").setTitle("Profile");
+
+    this.render();
+    this.renderPosts();
+    this.renderFollowing();
   }
 
   render() {
     this.shadowRoot.append(
-      create("div", { id: "profile" }, [
+      create("div", { class: "profile" }, [
         create("aside", { class: "side-bar" }, [
           this.currentUser.id === this.user.id
-            ? create("button", { onClick: this.editProfile, class: "action" }, [
+            ? create("button", { onClick: this.editProfile, class: "action", hero: true, appearance: "subtle" }, [
               create("ion-icon", { name: "build-outline" }),
               "Update",
             ])
             : this.currentUser.following.includes(this.user.id)
-              ? create("button", { onClick: this.unfollow, class: "action" }, [
+              ? create("button", { onClick: this.unfollow, class: "action", hero: true, appearance: "subtle" }, [
                 create("ion-icon", { name: "person-remove-outline" }),
                 "Unfollow",
               ])
-              : create("button", { onClick: this.follow, class: "action" }, [
+              : create("button", { onClick: this.follow, class: "action", hero: true, appearance: "subtle" }, [
                 create("ion-icon", { name: "person-add-outline" }),
                 "Follow",
               ]),
@@ -82,54 +80,44 @@ customElements.define("qp-profile", class extends HTMLElement {
             create("ion-icon", { name: "people-outline" })
           ]),
         ]),
-        create("div", { class: "content" }, [
+        create("div", { class: "profile__main" }, [
           create("div", { class: "profile-card card" }, [
-            create("header", {}, [
-              create("qp-avatar", { user: this.user.username, size: "xlarge" }),
-              create("span", {}, [this.user.username]),
+            create("header", { class: "profile-card__header" }, [
+              create("qp-avatar", { user: this.user.username, size: "xlarge", class: "profile-card__avatar" }),
             ]),
-            create("div", { class: "profile-card-body" }, [
-              this.user.name && create("div", { class: "profile-card-info" }, [
-                create("ion-icon", { name: "person-circle" }),
-                create("span", {}, [this.user.name]),
-              ]),
-              this.user.email && create("div", { class: "profile-card-info" }, [
-                create("ion-icon", { name: "at-circle" }),
-                create("span", {}, [this.user.email]),
-              ]),
-              create("div", { class: "profile-card-info" }, [
-                create("ion-icon", { name: "people-circle" }),
-                create("span", {}, [`${this.user.followed_num} followers`]),
-              ]),
-              create("div", { class: "profile-card-info" }, [
-                create("ion-icon", { name: "heart-circle" }),
-                create("span", {}, [
-                  `${String(this.posts.reduce((count, { meta: { likes } }) => count + likes.length, 0))} likes`
-                ]),
-              ]),
-              create("div", { class: "profile-card-info" }, [
-                create("ion-icon", { name: "list-circle" }),
-                create("span", {}, [`${String(this.posts.length)} posts`]),
-              ]),
+            create("div", { class: "profile-card__body" }, [
+              createInfo("finger-print", "Username", this.getAttribute("username")),
+              this.user.name &&
+              createInfo("person-circle", "Name", this.user.name),
+              this.user.email &&
+              createInfo("at-circle", "Email", this.user.email),
+              createInfo("people-circle", "Followers", String(this.user.followed_num)),
+              createInfo("heart-circle", "Likes",
+                String(this.posts.reduce((count, { meta: { likes } }) => count + likes.length, 0))
+              ),
+              createInfo("list-circle", "Posts", String(this.posts.length)),
             ])
           ]),
-          create("div", { class: "post-list" }, [])
+          create("h2", { class: "h600 profile__posts-heading" }, ["Posts"]),
+          create("div", { class: "profile__posts" }, [])
         ])
       ])
     );
   }
 
   renderPosts() {
-    this.shadowRoot.querySelector(".post-list").append(...this.posts.map(post =>
+    this.shadowRoot.querySelector(".profile__posts").append(...this.posts.map(post =>
       create("qp-post", {
         class: "post",
         "data-post-id": post.id,
         description: post.meta.description_text,
-        src: `data:image/png;base64,${post.src}`,
+        thumbnail: `data:image/png;base64,${post.thumbnail}`,
+        original: `data:image/png;base64,${post.src}`,
         published: post.meta.published,
         author: post.meta.author,
         likes: post.meta.likes,
         comments: post.comments,
+        currentUser: this.currentUser,
       })
     ));
   }
@@ -138,33 +126,21 @@ customElements.define("qp-profile", class extends HTMLElement {
     console.log(this.following);
     this.shadowRoot.querySelector(".side-bar").append(
       ...this.following.map(({ username }) =>
-        create("a", { href: `#/user/${username}` }, [
-          create("button", {}, [username])
-        ])
+        create("button", { onClick: () => navigateTo(`/user/${username}`), appearance: "subtle" }, [username])
       )
     );
   }
 
   async follow() {
-    console.log(await api.user.follow(this.user.username));
+    await api.user.follow(this.user.username);
   }
 
   async unfollow() {
-    console.log(await api.user.unfollow(this.user.username));
+    await api.user.unfollow(this.user.username);
   }
 
   editProfile() {
-    const closePopup = () => {
-      this.shadowRoot.getElementById("edit-profile").remove();
-    };
-
-    const handleClick = event => {
-      if (event.target.matches("dialog")) {
-        closePopup();
-      }
-    }
-
-    const handleSubmit = async (event) => {
+    const saveChanges = async (event) => {
       event.preventDefault();
 
       const formData = new FormData(this.shadowRoot.querySelector("form"));
@@ -174,36 +150,45 @@ customElements.define("qp-profile", class extends HTMLElement {
         delete payload.password;
       }
 
-      console.log(await api.user.update(payload));
-
-      closePopup();
+      await api.user.update(payload);
+      modal.close();
     };
 
-    const popup = create("dialog", { onClick: handleClick, id: "edit-profile", class: "popup card floating" }, [
-      create("div", { class: "popup-body" }, [
-        create("span", { class: "h600 no-margin" }, ["Your information"]),
-        create("form", { onSubmit: handleSubmit }, [
-          create("label", { for: "name", class: "h200" }, ["Name"]),
-          create("input", { id: "name", name: "name", placeholder: "John Smith", value: this.currentUser.name }),
-          create("label", { for: "email", class: "h200" }, ["Email"]),
-          create("input", {
-            id: "email",
-            type: "email",
-            name: "email",
-            placeholder: "john.smith@example.com",
-            value: this.currentUser.email
-          }),
-          create("label", { for: "password", class: "h200" }, ["New password"]),
-          create("input", { id: "password", type: "password", name: "password", placeholder: "•".repeat(10) }),
-          create("span", { class: "help-text" }, [
-            create("ion-icon", { name: "information-circle" }),
-            "Leave blank if you do not wish to change your password"
-          ]),
-          create("button", { style: { marginTop: "16px" } }, ["Save"]),
-        ])
-      ])
-    ]);
-    this.shadowRoot.append(popup);
-    popup.showModal();
+    const form =
+      create("form", { onSubmit: saveChanges }, [
+        create("label", { for: "name", class: "h200" }, ["Name"]),
+        create("input", {
+          id: "name",
+          name: "name",
+          placeholder: "John Smith",
+          value: this.currentUser.name,
+          onFocus: moveCursorToEnd,
+        }),
+        create("label", { for: "email", class: "h200" }, ["Email"]),
+        create("input", {
+          id: "email",
+          type: "email",
+          name: "email",
+          placeholder: "john.smith@example.com",
+          value: this.currentUser.email
+        }),
+        create("label", { for: "password", class: "h200" }, ["New password"]),
+        create("input", { id: "password", type: "password", name: "password", placeholder: "•".repeat(10) }),
+        create("span", { class: "help-text" }, [
+          create("ion-icon", { name: "information-circle" }),
+          "Leave blank if you do not wish to change your password"
+        ]),
+        create("button", { hidden: true }), // to allow form submission by pressing enter
+      ]);
+
+    const modal = create("qp-popup", {
+      heading: "Your information",
+      actions: [
+        { content: "Save", onClick: () => form.requestSubmit() },
+        { content: "Cancel" }
+      ]
+    }, [form]);
+    this.shadowRoot.append(modal);
+    modal.showModal();
   }
 });
