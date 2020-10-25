@@ -135,17 +135,26 @@ customElements.define("qp-feed", class extends HTMLElement {
       const data = new FormData(event.currentTarget);
       const payload = Object.fromEntries(data.entries());
 
-      const dataUrl = await fileToDataUrl(payload.image);
-      payload.src = dataUrl.match(/;base64,(.*)$/)[1];
-      delete payload.image;
+      try {
+        const dataUrl = await fileToDataUrl(payload.image);
+        payload.src = dataUrl.match(/;base64,(.*)$/)[1];
+        delete payload.image;
 
-      const response = await api.post.new(payload);
-      if (response.status !== 200) {
-        alert(response.message);
-      } else {
+        const response = await api.post.new(payload);
         window.location.reload();
+        popup.close();
+      } catch (error) {
+        const imgInput = event.currentTarget.querySelector("#image");
+        const helpText = create("span", { class: "help-text", appearance: "error" }, [
+          create("ion-icon", { name: "alert-circle" }),
+          error.message
+        ]);
+        if (imgInput.nextElementSibling) {
+          imgInput.nextElementSibling.replaceWith(helpText);
+        } else {
+          imgInput.insertAdjacentElement("afterend", helpText);
+        }
       }
-      popup.close();
     };
   }
 

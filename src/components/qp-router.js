@@ -110,6 +110,6 @@ customElements.define("qp-route", class extends HTMLElement {
   }
 
   isDefault() {
-    return this.getAttribute("default") === "true";
+    return this.hasAttribute("default");
   }
 });
