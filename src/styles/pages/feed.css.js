@@ -31,19 +31,8 @@ export default css`
 
 ${postLayout(".feed__posts")}
 
-.side-bar {
-  top: 64px;
-}
-
-@media (min-width: 768px) {
-  .side-bar {
-    top: 0px;
-    height: 100vh;
-  }
-
-  .feed__posts {
-    // justify-content: start;
-  }
+.feed__posts:empty::before {
+  content: "Nothing here yet...";
 }
 
 `;

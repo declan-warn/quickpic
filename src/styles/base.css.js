@@ -42,7 +42,7 @@ const baseStyle = css`
   width: 240px;
   height: 100vh;
   position: sticky;
-  top: 0;
+  top: 64px;
   padding: 16px;
   display: flex;
   flex-direction: column;
@@ -61,6 +61,12 @@ const baseStyle = css`
   display: inline-flex;
   align-items: center;
   font-weight: 500;
+}
+
+@media (min-width: ${mobileBreakpoint}) {
+  .side-bar {
+    top: 0px;
+  }
 }
 
 aside button[hero] ion-icon {

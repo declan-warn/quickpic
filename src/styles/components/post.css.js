@@ -15,6 +15,11 @@ export const postLayout = selector =>
     align-content: start;
   }
 
+  ${selector}:empty::before {
+    content: "Nothing here yet...";
+    text-align: center;
+  }
+
   @media (min-width: ${mobileBreakpoint}) {
     ${selector} {
       gap: 48px;
