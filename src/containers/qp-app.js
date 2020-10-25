@@ -25,6 +25,7 @@ customElements.define("qp-app", class extends HTMLElement {
     this.notified = new Set();
 
     this.poll = this.poll.bind(this);
+    this.searchUser = this.searchUser.bind(this);
   }
 
   // Set the page title, showing on the left hand side in the navbar
@@ -47,7 +48,7 @@ customElements.define("qp-app", class extends HTMLElement {
               create("ion-icon", { name: "grid" })
             ])
           ]),
-          create("qp-nav-link", { slot: "primary", "aria-label": "search users" }, [
+          create("qp-nav-link", { slot: "primary", "aria-label": "search users", onClick: this.searchUser }, [
             create("ion-icon", { name: "search" })
           ]),
           create("qp-nav-link", { slot: "secondary", "aria-label": "sign out" }, [
@@ -101,5 +102,55 @@ customElements.define("qp-app", class extends HTMLElement {
       ]
     });
     this.shadowRoot.append(flag);
+  }
+
+  // Shows a modal used to search for a user
+  searchUser() {
+    const handleSubmit = async (event) => {
+      event.preventDefault();
+
+      const form = event.currentTarget;
+
+      const data = new FormData(form);
+      const username = data.get("username");
+
+      const response = await api.user.getByUsername(username);
+      console.log(response);
+      switch (response.status) {
+        case 200:
+          navigateTo(`user/${username}`);
+          break;
+
+        case 404:
+          const input = form.querySelector("#username");
+          const helpText = create("span", { class: "help-text", appearance: "error" }, [
+            create("ion-icon", { name: "alert-circle" }),
+            response.message
+          ]);
+          if (input.nextElementSibling) {
+            input.nextElementSibling.replaceWith(helpText);
+          } else {
+            input.insertAdjacentElement("afterend", helpText);
+          }
+          break;
+      }
+    };
+
+    const modal = create("qp-popup", {
+      heading: "Find a user",
+      description: "Please note this will only find a user with the exact same username",
+      actions: [
+        { content: "Search", onClick: () => modal.querySelector("form").requestSubmit() },
+        { content: "Cancel" }
+      ]
+    }, [
+      create("form", { onSubmit: handleSubmit }, [
+        create("label", { class: "h200", for: "username", required: true }, ["Username"]),
+        create("input", { id: "username", name: "username" })
+      ])
+    ]);
+
+    this.shadowRoot.append(modal);
+    modal.showModal();
   }
 });
