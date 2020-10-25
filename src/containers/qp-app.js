@@ -117,10 +117,12 @@ customElements.define("qp-app", class extends HTMLElement {
       const response = await api.user.getByUsername(username);
       console.log(response);
       switch (response.status) {
+        // If the user is found then go to their profile
         case 200:
           navigateTo(`user/${username}`);
           break;
 
+        // If the user isn't found show a message showing this
         case 404:
           const input = form.querySelector("#username");
           const helpText = create("span", { class: "help-text", appearance: "error" }, [
@@ -138,7 +140,7 @@ customElements.define("qp-app", class extends HTMLElement {
 
     const modal = create("qp-popup", {
       heading: "Find a user",
-      description: "Please note this will only find a user with the exact same username",
+      description: "Please note this will only find a user with the exact same username (case sensitive)",
       actions: [
         { content: "Search", onClick: () => modal.querySelector("form").requestSubmit() },
         { content: "Cancel" }
