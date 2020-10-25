@@ -6,27 +6,27 @@ export default css`
   display: flex;
 }
 
-#container.xsmall {
+.avatar.xsmall {
   --dim: 16px;
 }
 
-#container.small {
+.avatar.small {
   --dim: 24px;
 }
 
-#container.medium {
+.avatar.medium {
   --dim: 32px;
 }
 
-#container.xlarge {
+.avatar.xlarge {
   --dim: 96px;
 }
 
-#container.xxlarge {
+.avatar.xxlarge {
   --dim: 128px;
 }
 
-#container {
+.avatar {
   --dim: 32px;
   box-sizing: border-box;
   height: var(--dim);
@@ -38,11 +38,11 @@ export default css`
   display: inline-flex;
 }
 
-img {
+.avatar img {
   width: 100%;
 }
 
-:host([outline="false"]) #container {
+:host([outline="false"]) .avatar {
   box-shadow: none;
 }
 
