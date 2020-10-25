@@ -67,7 +67,7 @@ customElements.define("qp-app", class extends HTMLElement {
     if (!this.isConnected) return;
 
 
-    const { posts } = await api.user.feed();
+    const { posts } = await api.user.feed({ n: 3 });
     const newPosts = new Set();
     for (const post of posts) {
       if (!this.notified.has(post.id) && Number(post.meta.published) * 1000 > this.start) {

@@ -155,7 +155,7 @@ customElements.define("qp-post", class extends HTMLElement {
     button.setAttribute("aria-label", "unlike");
     button.nextSibling.textContent = String(oldCount + 1);
     this.likes = this.likes.concat(this.currentUser.id);
-    console.log(await api.post.like(this.id));
+    await api.post.like(this.id);
   }
 
   async unlikePost(event) {
@@ -164,7 +164,7 @@ customElements.define("qp-post", class extends HTMLElement {
     button.setAttribute("aria-label", "like");
     button.nextSibling.textContent = String(oldCount - 1);
     this.likes = this.likes.filter(id => id !== this.currentUser.id);
-    console.log(await api.post.unlike(this.id));
+    await api.post.unlike(this.id);
   }
 
   async toggleLike(event) {

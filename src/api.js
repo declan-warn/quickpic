@@ -51,8 +51,8 @@ const useEndpoint = url => {
     getJSON(`${url}/user`);
   user.update = payload =>
     putJSON(`${url}/user`, payload);
-  user.feed = () =>
-    getJSON(`${url}/user/feed`);
+  user.feed = ({ p = 0, n = 10 } = {}) =>
+    getJSON(`${url}/user/feed?p=${p}&n=${n}`);
   user.follow = username =>
     putJSON(`${url}/user/follow?username=${username}`);
   user.unfollow = username =>

@@ -6,7 +6,6 @@ customElements.define("qp-nav", class extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
-    console.log(navStyle);
     this.shadowRoot.adoptedStyleSheets = [navStyle];
     this.shadowRoot.append(
       create("nav", {}, [

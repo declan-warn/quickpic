@@ -5,10 +5,8 @@ export const navigateTo = route => {
     route = `/${route}`;
   }
   if (window.location.hash === `#${route}`) {
-    console.log("RELOADING?");
     window.location.reload();
   } else {
-    console.log(window.location.hash, route);
     window.location.hash = route;
   }
 }
@@ -36,7 +34,6 @@ customElements.define("qp-router", class extends HTMLElement {
     const route = window.location.hash.replace(/^#/, "");
     for (const child of this.children) {
       if (child.matches("qp-route") && child.matchesRoute(route)) {
-        console.log("MATCHING:", child);
         this.append(child.render(route));
         break;
       }

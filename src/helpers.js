@@ -138,3 +138,7 @@ export const showDate = published => {
 export const moveCursorToEnd = ({ currentTarget }) => {
   currentTarget.selectionStart = currentTarget.selectionEnd = currentTarget.value.length;
 };
+
+export const numDesc = (a, b) => b - a;
+
+export const numFnDesc = fn => (a, b) => numDesc(fn(a), fn(b));
