@@ -3,6 +3,12 @@ import { create } from "/src/helpers.js";
 import baseStyle from "/src/styles/base.css.js";
 import flagStyle from "/src/styles/components/flag.css.js";
 
+/*
+ * A component used to show a notification in the bottom left of the screen
+ *
+ * Modelled after <https://atlassian.design/components/flag/examples>
+*/
+
 customElements.define("qp-flag", class extends HTMLElement {
   constructor() {
     super();
@@ -29,6 +35,7 @@ customElements.define("qp-flag", class extends HTMLElement {
       ])
     );
 
+    // Opening animation
     this.shadowRoot.querySelector(".flag")
       .addEventListener("animationend", ({ currentTarget }) => {
         currentTarget.classList.remove("opening");
@@ -36,6 +43,7 @@ customElements.define("qp-flag", class extends HTMLElement {
   }
 
   close() {
+    // Play closing animation before removing self
     this.shadowRoot.querySelector(".flag").classList.add("closing");
     this.shadowRoot.querySelector(".flag")
       .addEventListener("animationend", () => this.remove(), true);

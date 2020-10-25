@@ -142,3 +142,17 @@ export const moveCursorToEnd = ({ currentTarget }) => {
 export const numDesc = (a, b) => b - a;
 
 export const numFnDesc = fn => (a, b) => numDesc(fn(a), fn(b));
+
+// Helper function used to take 
+export const take = async (n, generator) => {
+  const result = [];
+  for (let i = 0; i < n; i++) {
+    const { value, done } = await generator.next();
+    if (done) break;
+    result.push(value);
+  }
+  return result;
+};
+
+export const getScrollPercentage = () =>
+  window.scrollY / (document.body.scrollHeight - document.body.clientHeight);

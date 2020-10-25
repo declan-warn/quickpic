@@ -3,6 +3,18 @@ import api from "/src/api.js";
 
 import avatarStyle from "/src/styles/components/avatar.css.js";
 
+/*
+ * Component that shows a user's avatar in a variety of sizes
+ * 
+ * Avatars are assigned using a seeded random number generator
+ * to ensure distribution and reproducibility
+ * 
+ * This component will show and cache the current user's avatar if no user
+ * parameter is given.
+ * 
+ * Modelled after <https://atlassian.design/components/avatar/examples>
+*/
+
 let cachedUsername;
 
 customElements.define("qp-avatar", class extends HTMLElement {

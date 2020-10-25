@@ -7,6 +7,12 @@ import authStyle from "/src/styles/pages/auth.css.js";
 
 import "/src/components/qp-banner.js";
 
+/*
+ * Login page
+ *
+ * Uses sessionStorage to save a token on successful login
+*/
+
 customElements.define("qp-login", class extends HTMLElement {
   constructor() {
     super();

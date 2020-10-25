@@ -5,6 +5,12 @@ import { navigateTo } from "/src/components/qp-router.js";
 import baseStyle from "/src/styles/base.css.js";
 import authStyle from "/src/styles/pages/auth.css.js";
 
+/*
+ * Signup page
+ *
+ * Uses sessionStorage to save a token on successful signup
+*/
+
 customElements.define("qp-signup", class extends HTMLElement {
   constructor() {
     super();
@@ -39,6 +45,7 @@ customElements.define("qp-signup", class extends HTMLElement {
       ])
     );
 
+    // Custom validation to check passwords match
     this.shadowRoot
       .getElementById("confirm")
       .addEventListener("input", ({ currentTarget, target }) => {
@@ -63,14 +70,11 @@ customElements.define("qp-signup", class extends HTMLElement {
     const data = new FormData(form);
     const payload = Object.fromEntries(data.entries());
 
-    if (payload.password !== payload.confirm) {
-      return alert("Passwords do not match");
-    }
-
     const response = await api.auth.signup(payload);
 
     switch (response.status) {
       case 200:
+        sessionStorage.setItem("token", response.token);
         navigateTo("/feed");
         break;
 

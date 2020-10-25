@@ -1,5 +1,7 @@
 @import "/styles/colour.css";
 
+/* This file is used to provide a few minor, global resets */
+
 html {
   --page-background: var(--col-N0);
 }

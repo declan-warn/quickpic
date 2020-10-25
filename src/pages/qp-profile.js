@@ -10,6 +10,15 @@ import "/src/components/qp-spinner.js";
 import baseStyle from "/src/styles/base.css.js";
 import profileStyle from "/src/styles/pages/profile.css.js";
 
+/*
+ * Profile page
+ *
+ * Handles showing user's info + posts and who they follow
+ * 
+ * Will show "Edit Profile" for your own profile
+ * and "Follow" or "Unfollow" as appropriate for other user's profiles
+*/
+
 const createInfo = (iconName, field, value, id = "") =>
   create("div", { class: "profile-card__info card" }, [
     create("ion-icon", { name: iconName, class: "profile-card__info__icon" }),
@@ -30,6 +39,7 @@ customElements.define("qp-profile", class extends HTMLElement {
   }
 
   async connectedCallback() {
+    // Loading state
     this.shadowRoot.append(
       create("div", { class: "profile" }, [
         create("aside", { class: "side-bar" }),
@@ -39,9 +49,12 @@ customElements.define("qp-profile", class extends HTMLElement {
       ])
     )
 
+    // Redirect to current user if none is specifed
+    // Uses history replace for better UX
     if (!this.getAttribute("username")) {
       const { username } = await api.user.getCurrent();
-      return navigateTo(`user/${username}`);
+      history.replaceState(null, "", `#/user/${username}`);
+      return window.location.reload();
     }
 
     [this.user, this.currentUser] = await Promise.all([

@@ -2,6 +2,12 @@ import { create } from "/src/helpers.js";
 
 import navStyle from "/src/styles/containers/nav.css.js";
 
+/*
+ * Navigation container that contains the navigation links
+ * as well as page title (which is assigned by its parent).
+ *
+*/
+
 customElements.define("qp-nav", class extends HTMLElement {
   constructor() {
     super();

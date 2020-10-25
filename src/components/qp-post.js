@@ -7,7 +7,13 @@ import baseStyle from "/src/styles/base.css.js";
 import postStyle from "/src/styles/components/post.css.js";
 import { navigateTo } from "/src/components/qp-router.js";
 
+/* 
+ * Post component, shows a post from either the feed or a user's profile
+ * Handles commenting, likes, editing, and expansion when clicked
+*/
+
 customElements.define("qp-post", class extends HTMLElement {
+  // Listens to its description attribute, used for editing functionality
   static get observedAttributes() {
     return ["description"];
   }
@@ -17,6 +23,8 @@ customElements.define("qp-post", class extends HTMLElement {
     this.attachShadow({ mode: "open" });
     this.shadowRoot.adoptedStyleSheets = [baseStyle, postStyle];
 
+    // Lots of context binding as these are used as event handlers
+    // and we don't want to lose the this context
     this.showLikes = this.showLikes.bind(this);
     this.likePost = this.likePost.bind(this);
     this.unlikePost = this.unlikePost.bind(this);
@@ -37,7 +45,6 @@ customElements.define("qp-post", class extends HTMLElement {
   }
 
   async connectedCallback() {
-    // this.currentUser = await api.user.getCurrent();
     const { id } = this.currentUser;
 
     this.comments.sort((a, b) => Number(b.published) - Number(a.published));
@@ -106,6 +113,8 @@ customElements.define("qp-post", class extends HTMLElement {
     );
   }
 
+  // Update DOM if description attribute is changed
+  // This will occur if the user edits their post
   attributeChangedCallback(name, oldValue, newValue) {
     if (name === "description") {
       const descElem = this.shadowRoot.querySelector(".post__description");
@@ -115,6 +124,7 @@ customElements.define("qp-post", class extends HTMLElement {
     }
   }
 
+  // Show a modal containing a list of users who have liked the post
   async showLikes(event) {
     const users = await Promise.all(this.likes.map(id => api.user.getById(id)));
 
@@ -149,6 +159,7 @@ customElements.define("qp-post", class extends HTMLElement {
     modal.showModal();
   }
 
+  // Like the post, doing a dynamic update of the DOM
   async likePost(event) {
     const button = event.currentTarget;
     const oldCount = Number(button.nextSibling.textContent);
@@ -158,6 +169,7 @@ customElements.define("qp-post", class extends HTMLElement {
     await api.post.like(this.id);
   }
 
+  // Unlike the post, doing a dynamic update of the DOM
   async unlikePost(event) {
     const button = event.currentTarget;
     const oldCount = Number(button.nextSibling.textContent);
@@ -167,6 +179,7 @@ customElements.define("qp-post", class extends HTMLElement {
     await api.post.unlike(this.id);
   }
 
+  // Toggle liked/unliked states
   async toggleLike(event) {
     const button = event.currentTarget;
     const oldCount = Number(button.nextSibling.textContent);
@@ -177,6 +190,7 @@ customElements.define("qp-post", class extends HTMLElement {
     }
   }
 
+  // Shows the comments in a modal, and allows for the current user to comment
   async showComments() {
     const modal =
       create("qp-popup", {
@@ -207,6 +221,7 @@ customElements.define("qp-post", class extends HTMLElement {
     modal.showModal();
   }
 
+  // Event handler to add a comment, will do DOM manipulation to create the comment immediately
   async addComment(event) {
     event.preventDefault();
     const input = event.currentTarget.querySelector("#new-comment");
@@ -217,6 +232,7 @@ customElements.define("qp-post", class extends HTMLElement {
     if (status === 200) {
       const { username: author } = await api.user.getCurrent();
 
+      // Handle discrepancy between python/javascript second/millisecond difference with times
       const published = String(Date.now() / 1000);
 
       const comments = this.shadowRoot.querySelector(".comment-list");
@@ -236,6 +252,7 @@ customElements.define("qp-post", class extends HTMLElement {
     }
   }
 
+  // Will render a comment
   createComment({ author, published, comment }) {
     return (
       create("div", { class: "comment" }, [
@@ -257,6 +274,7 @@ customElements.define("qp-post", class extends HTMLElement {
     );
   }
 
+  // Show the edit modal for a post
   async edit() {
     const saveChanges = async (event) => {
       event.preventDefault();
@@ -307,6 +325,7 @@ customElements.define("qp-post", class extends HTMLElement {
     modal.showModal();
   }
 
+  // Show a modal to confirm that the user actually wants to delete the post
   confirmDelete() {
     const deletePost = async (event) => {
       await api.post.delete(this.id);
@@ -329,8 +348,10 @@ customElements.define("qp-post", class extends HTMLElement {
     modal.showModal();
   }
 
+  // Expands an image to occupy most of the viewport
   expand(event) {
     // Not ideal but better than binding a bunch of events just to stop propagation
+    // Clicking these areas (and only these areas) will expand the image
     const allowedTargets = [
       ".post__container",
       ".post__image",

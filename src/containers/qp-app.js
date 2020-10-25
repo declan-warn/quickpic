@@ -8,6 +8,11 @@ import "/src/components/qp-flag.js";
 import baseStyle from "/src/styles/base.css.js";
 import appStyle from "/src/styles/containers/app.css.js";
 
+/*
+ * A container component that wraps the entire app,
+ * providing the navigation bar, basic layout and title capabilities
+*/
+
 customElements.define("qp-app", class extends HTMLElement {
   constructor() {
     super();
@@ -22,6 +27,7 @@ customElements.define("qp-app", class extends HTMLElement {
     this.poll = this.poll.bind(this);
   }
 
+  // Set the page title, showing on the left hand side in the navbar
   setTitle(title) {
     const h1 = this.shadowRoot.querySelector(".app__page-title");
 
@@ -63,9 +69,9 @@ customElements.define("qp-app", class extends HTMLElement {
     this.nextPoll = window.setTimeout(this.poll, 0);
   }
 
+  // Poll to see if there is a new post from a user you follow
   async poll() {
     if (!this.isConnected) return;
-
 
     const { posts } = await api.user.feed({ n: 3 });
     const newPosts = new Set();
@@ -83,6 +89,7 @@ customElements.define("qp-app", class extends HTMLElement {
     this.nextPoll = window.setTimeout(this.poll, 2500);
   }
 
+  // Shows a notification of a newly created post
   notify(post) {
     const flag = create("qp-flag", {
       icon: "information-circle",
